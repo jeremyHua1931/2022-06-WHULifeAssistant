@@ -17,5 +17,5 @@ mybatis-plus:
     default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
 
 server:
-  port: 80
+  port: 8081
 
