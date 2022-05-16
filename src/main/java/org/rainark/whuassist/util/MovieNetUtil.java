@@ -47,7 +47,6 @@ public class MovieNetUtil {
 
         Movie temp;
         JSONObject tobject;
-        System.out.println(list.size());
         for(int i=0;i<len;i++) {
             tobject=list.getJSONObject(i);
             //The '/' symbols in the response JSON is represented as '\/', so it's necessary to replace back before use.
