@@ -24,7 +24,7 @@ public class Movie {
     public String name;
     public String info;
     public String description;
-    public float rank;
+    public double rank;
     public String detailPage;
     /**
      * Get the poster image of the movie.

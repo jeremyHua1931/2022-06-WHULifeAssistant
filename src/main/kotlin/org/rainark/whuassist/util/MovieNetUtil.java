@@ -1,8 +1,9 @@
 package org.rainark.whuassist.util;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,13 +41,13 @@ public class MovieNetUtil {
         if(connection.getResponseCode()!=200)
             throw new IOException("Failed to connect to target website:"+connection.getResponseCode());
         String responseJson= inputStreamToString(connection.getInputStream());
-        JSONObject obj=new JSONObject(responseJson);
+        JSONObject obj= JSON.parseObject(responseJson);
         JSONArray list=obj.getJSONArray("subjects");
         ArrayList<Movie> result=new ArrayList<>();
 
         Movie temp;
         JSONObject tobject;
-        System.out.println(list.length());
+        System.out.println(list.size());
         for(int i=0;i<len;i++) {
             tobject=list.getJSONObject(i);
             //The '/' symbols in the response JSON is represented as '\/', so it's necessary to replace back before use.
@@ -56,7 +57,7 @@ public class MovieNetUtil {
                 temp=new Movie();
             temp.detailPage=tobject.getString("url");
             temp.image=new URL(tobject.getString("cover"));
-            temp.rank=(float)tobject.getDouble("rate");
+            temp.rank=tobject.getDouble("rate");
             //The '/' in movie name will disturb poster file saving.
             temp.name=tobject.getString("title").replace("/","丨");
             result.add(temp);

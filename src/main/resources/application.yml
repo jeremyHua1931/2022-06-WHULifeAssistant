@@ -1,21 +1,21 @@
 spring:
-servlet:
-multipart:
-max-file-size: 3MB
-max-request-size: 3MB
-application:
-name: "WHUAssist"
-datasource:
-driver-class-name: com.mysql.cj.jdbc.Driver
-url: jdbc:mysql://localhost:3306/bomber?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-username: root
-password: mscpad*rgby
+  servlet:
+    multipart:
+      max-file-size: 3MB
+      max-request-size: 3MB
+  application:
+    name: "WHUAssist"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bomber?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: mscpad*rgby
 
 mybatis-plus:
-type-enums-package: org.zz.bomber.entity
-configuration:
-default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+  type-enums-package: org.rainark.whuassist.entity
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
 
 server:
-port: 80
+  port: 8080
 
