@@ -29,7 +29,7 @@ class AgainstHollow(
     var reply_post_id : Long,
     var belong_to : Long,
     var against_num : Int,
-    var username : String,
+    var username : String
 )
 
 class ReplyHollow(
