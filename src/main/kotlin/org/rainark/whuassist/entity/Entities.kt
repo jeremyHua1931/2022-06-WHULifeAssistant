@@ -7,11 +7,6 @@ import com.baomidou.mybatisplus.annotation.TableName
 import java.sql.Date
 import java.sql.Time
 
-const val ATTITUDE_NULL : Short = 0
-const val ATTITUDE_SUPPORT : Short = 1
-const val ATTITUDE_COMFORT : Short = 2
-const val ATTITUDE_AGAINST : Short = 3
-
 @TableName("xuser")
 class User(
     @TableId(type = IdType.AUTO) var userId : Long,
@@ -42,5 +37,13 @@ class Hollow(
 class HollowAttitude(
     var userId: Long,
     var hollowId: Long,
-    var attitude : Short
+    var support_attitude : Short,
+    var comfort_attitude : Short,
+    var against_attitude : Short
+)
+
+@TableName("xreplyhollow")
+class ReplyHollowMsg(
+    var userId: Long,
+    @TableId(type = IdType.AUTO) var hollowId: Long
 )

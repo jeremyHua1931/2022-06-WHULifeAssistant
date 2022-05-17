@@ -30,6 +30,12 @@ class RequestException(val status : ResponseCode, val extra : String? = null) : 
         = simpleErrorResponse(status, extra)
 }
 
+fun simpleMsgResponse(code : Int, msg : String) : String
+        = JSONObject().apply {
+    put("code", code)
+    put("msg", msg)
+}.toJSONString().exportInfo()
+
 fun simpleResponse(code : Int, msg : String, data : JSONObject) : String
         = JSONObject().apply {
     put("code", code)

@@ -1,6 +1,7 @@
 drop table if exists xuser;
 drop table if exists xhollow;
 drop table if exists xhattitude;
+drop table if exists xreplyhollow;
 
 create table xuser
 (
@@ -13,7 +14,7 @@ create table xuser
     mbti MEDIUMINT,
     image varchar(100),
     PRIMARY KEY (user_id)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 create table xhollow
 (
@@ -27,11 +28,20 @@ create table xhollow
     comfort_num INT,
     against_num INT,
     PRIMARY KEY (hollow_id)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 create table xhattitude
 (
     user_id BIGINT,
     hollow_id BIGINT,
-    attitude MEDIUMINT
-);
+    support_attitude MEDIUMINT,
+    comfort_attitude MEDIUMINT,
+    against_attitude MEDIUMINT
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table xreplyhollow
+(
+    user_id BIGINT,
+    hollow_id BIGINT,
+    PRIMARY KEY (hollow_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
