@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import org.rainark.whuassist.entity.Movie;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +36,7 @@ public class MovieNetUtil {
      * */
     public static ArrayList<Movie> getMovies(int offset, int len, boolean resolveDetail) throws IOException, JSONException {
         URL request=new URL(INDEX_REQUEST_URL+"&"+PAGE_OFFSET+"="+offset+"&"+PAGE_MAX+"="+(offset+len));
+        System.out.println(request);
         HttpURLConnection connection=(HttpURLConnection)request.openConnection();
         connection.setRequestMethod("GET");
         connection.addRequestProperty("User-Agent",CHROME_AGENT);
@@ -50,18 +52,20 @@ public class MovieNetUtil {
         for(int i=0;i<len;i++) {
             tobject=list.getJSONObject(i);
             //The '/' symbols in the response JSON is represented as '\/', so it's necessary to replace back before use.
-            if(resolveDetail)
-                temp=parseDetailPage(tobject.getString("url"));
-            else
-                temp=new Movie();
-            temp.detailPage=tobject.getString("url");
-            temp.image=new URL(tobject.getString("cover"));
-            temp.rank=tobject.getDouble("rate");
-            //The '/' in movie name will disturb poster file saving.
-            temp.name=tobject.getString("title").replace("/","丨");
-            result.add(temp);
-        }
 
+           String detailPage=tobject.getString("url");
+           String image=tobject.getString("cover");
+           Double ranks =tobject.getDouble("rate");
+            //The '/' in movie name will disturb poster file saving.
+           String name=tobject.getString("title").replace("/","丨");
+
+           String [] res0=new String[2];
+            if(resolveDetail)      {
+                res0=parseDetailPage(tobject.getString("url"));
+            }
+            Movie temp11=new Movie(name,ranks,detailPage,image,res0[0],res0[1],"movie");
+            result.add(temp11);
+        }
         return result;
     }
     /**
@@ -70,9 +74,9 @@ public class MovieNetUtil {
      *
      * @return A Movie object containing only description and info.
      * */
-    public static Movie parseDetailPage(String url)throws IOException{
+    public static String[] parseDetailPage(String url)throws IOException{
         URL request=new URL(url);
-        Movie result=new Movie();
+//        Movie result=new Movie();
         HttpURLConnection connection=(HttpURLConnection)request.openConnection();
         connection.setRequestMethod("GET");
         connection.addRequestProperty("User-Agent",CHROME_AGENT);
@@ -100,10 +104,12 @@ public class MovieNetUtil {
                 .split("······",2)[1]
                 .trim();
 
-        result.info=processedInfo;
-        result.description=processedDepict;
 
-        return result;
+        String[] tmp=new String[2];
+        tmp[0]=processedInfo;
+        tmp[1]=processedDepict;
+
+        return tmp;
     }
     private static String inputStreamToString(InputStream is) throws IOException {
         InputStreamReader reader=new InputStreamReader(is, StandardCharsets.UTF_8);

@@ -39,6 +39,35 @@ create table xhattitude
     against_attitude MEDIUMINT
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+create table xmovie(
+    name varchar(255),
+    ranks DOUBLE,
+    info TEXT,
+    description TEXT,
+    detailpage TEXT,
+    image TINYTEXT,
+    type TINYTEXT,
+    PRIMARY KEY (name)
+);
+
+create table xnovel
+(
+    type varchar(255),
+    choice TINYTEXT,
+    ranks TINYINT,
+    name TINYTEXT,
+    author TINYTEXT,
+    novelurl TINYTEXT,
+    image TINYTEXT,
+    category TINYTEXT,
+    subcategory TINYTEXT,
+    completionstatus TINYTEXT,
+    updatedchapter TINYTEXT,
+    introduction TEXT,
+    PRIMARY KEY (type)
+);
+
+
 create table xreplyhollow
 (
     user_id BIGINT,

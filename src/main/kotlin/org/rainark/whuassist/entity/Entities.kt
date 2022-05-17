@@ -1,9 +1,9 @@
 package org.rainark.whuassist.entity
 
 import com.baomidou.mybatisplus.annotation.IdType
-import com.baomidou.mybatisplus.annotation.TableField
 import com.baomidou.mybatisplus.annotation.TableId
 import com.baomidou.mybatisplus.annotation.TableName
+
 import java.sql.Date
 import java.sql.Time
 
@@ -47,3 +47,36 @@ class ReplyHollowMsg(
     var userId: Long,
     @TableId(type = IdType.AUTO) var hollowId: Long
 )
+
+@TableName("xnovel")
+class Novel(
+    @TableId(type = IdType.AUTO)
+    val type:String,
+    val choice:String,
+    val ranks:Int,
+    val name:String,
+    val author:String,
+    val novelurl:String,
+    val image:String,
+    val category: String,
+    val subcategory:String,
+    val completionstatus:String,
+    val updatedchapter:String,
+    val introduction:String
+) {
+}
+
+@TableName("xmovie")
+class Movie(
+    @TableId(type = IdType.AUTO)
+    val name:String,
+    val ranks:Double,
+    val detailpage:String,
+    val image: String,
+    val info:String,
+    val description: String,
+    val type:String
+
+) {
+
+}
