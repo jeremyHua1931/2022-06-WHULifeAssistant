@@ -45,8 +45,9 @@ class RecommendController {
     lateinit var TVMapper: TVMapper
 
     @PostMapping("/recom/refresh")
-    fun crawlRefresh(@JsonParam msg: String) {
+    fun crawlRefresh(@JsonParam msg: String):String {
         updateCrawlResult.updateCrawlToMySQL()
+        return "success"
     }
 
     @PostMapping("/recom/novel")

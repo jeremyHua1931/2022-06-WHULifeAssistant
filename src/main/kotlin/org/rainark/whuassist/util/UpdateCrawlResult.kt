@@ -8,8 +8,10 @@ import org.rainark.whuassist.mapper.MovieMapper
 import org.rainark.whuassist.mapper.NovelMapper
 import org.rainark.whuassist.mapper.TVMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
+import javax.annotation.PostConstruct
 
 /**
  * Legacy class for using crawl results to update recommend list
@@ -40,9 +42,23 @@ class UpdateCrawlResult {
      *    lateinit var updateCrawlResult: UpdateCrawlResult
      *    updateCrawlResult.updateCrawlToMySQL()
      */
+    companion object {
+        var recordCount: Int = 0
+    }
 
+    //    cron="0 */1 * * * ?"         测试本功能时,每一分钟执行一次
+    //    cron="0 */5 * * * ?"         测试其他功能时,每五分钟执行一次
+    //    cron="0 0 4 * * ?"           正常部署时,每天凌晨四点执行一次
+    @PostConstruct
+    @Scheduled(cron = "0 */5 * * * ?")
     fun updateCrawlToMySQL() {
-        println("Start to update recommended list and it needs some time...." + "       " + LocalDateTime.now())
+        if (recordCount == 0) {
+            println("初始化数据库中......")
+        } else {
+            println("第 $recordCount 次更新数据库中......")
+        }
+        recordCount++
+        println("Start to update recommended list and it takes about twenty seconds...." + "       " + LocalDateTime.now())
         //1-获取最新的爬虫结果
         var resultYuepiao = ArrayList<Novel>()
         var resultRecommend = ArrayList<Novel>()
@@ -76,31 +92,26 @@ class UpdateCrawlResult {
 //        printMovieCrawl(resultMovie)
 //        printTVCrawl(resultTV)
 
-        println("Start to update database ...." + "      " + LocalDateTime.now())
+//        println("Start to update database ...." + "             " + LocalDateTime.now())
         novelMapper.delete(QueryWrapper<Novel>().eq("kind", "novel"))
-        println("The Novel table is cleared")
         resultYuepiao.addAll(resultRecommend)
         resultYuepiao.addAll(resultMMYuepiao)
         resultYuepiao.addAll(resultMMRecommend)
         for (x in resultYuepiao) {
             novelMapper.insert(x)
         }
-        println("The Novel table is refreshed" + "       " + LocalDateTime.now())
 
         movieMapper.delete(QueryWrapper<Movie>().eq("type", "movie"))
-        println("The Movie table is cleared" + "         " + LocalDateTime.now())
         for (x in resultMovie) {
             movieMapper.insert(x)
         }
-        println("The Movie table is refreshed" + "       " + LocalDateTime.now())
 
         TVMapper.delete(QueryWrapper<TV>().eq("type", "TV"))
-        println("The TV table is cleared" + "            " + LocalDateTime.now())
         for (x in resultTV) {
             TVMapper.insert(x)
         }
-        println("The TV table is refreshed" + "          " + LocalDateTime.now())
-        println("recommended list is already refreshed" + "          " + LocalDateTime.now())
+//        println("Updating  database  is finished ...." + "      " + LocalDateTime.now())
+        println("recommended list is already refreshed" + "     " + LocalDateTime.now())
 
     }
     //3-更新SQL
