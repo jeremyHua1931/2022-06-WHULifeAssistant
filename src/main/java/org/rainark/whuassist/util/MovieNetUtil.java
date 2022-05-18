@@ -36,7 +36,7 @@ public class MovieNetUtil {
      * */
     public static ArrayList<Movie> getMovies(int offset, int len, boolean resolveDetail) throws IOException, JSONException {
         URL request=new URL(INDEX_REQUEST_URL+"&"+PAGE_OFFSET+"="+offset+"&"+PAGE_MAX+"="+(offset+len));
-        System.out.println(request);
+//        System.out.println(request);
         HttpURLConnection connection=(HttpURLConnection)request.openConnection();
         connection.setRequestMethod("GET");
         connection.addRequestProperty("User-Agent",CHROME_AGENT);
@@ -47,7 +47,6 @@ public class MovieNetUtil {
         JSONArray list=obj.getJSONArray("subjects");
         ArrayList<Movie> result=new ArrayList<>();
 
-        Movie temp;
         JSONObject tobject;
         for(int i=0;i<len;i++) {
             tobject=list.getJSONObject(i);
@@ -63,8 +62,8 @@ public class MovieNetUtil {
             if(resolveDetail)      {
                 res0=parseDetailPage(tobject.getString("url"));
             }
-            Movie temp11=new Movie(name,ranks,detailPage,image,res0[0],res0[1],"movie");
-            result.add(temp11);
+            Movie temp=new Movie(name,ranks,detailPage,image,res0[0],res0[1],"movie");
+            result.add(temp);
         }
         return result;
     }

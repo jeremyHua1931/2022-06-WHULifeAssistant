@@ -62,7 +62,8 @@ class Novel(
     val subcategory:String,
     val completionstatus:String,
     val updatedchapter:String,
-    val introduction:String
+    val introduction:String,
+    val kind:String
 ) {
 }
 
@@ -78,5 +79,18 @@ class Movie(
     val type:String
 
 ) {
+}
+
+@TableName("xtv")
+class TV(
+    @TableId(type=IdType.AUTO)
+    val name:String,
+    val ranks:Double,
+    val detailpage: String,
+    val image: String,
+    val info: String,
+    val description: String,
+    val type:String
+){
 
 }

@@ -2,6 +2,10 @@ drop table if exists xuser;
 drop table if exists xhollow;
 drop table if exists xhattitude;
 drop table if exists xreplyhollow;
+drop table if exists xmovie;
+drop table if exists xtv;
+drop table if exists xnovel;
+
 
 create table xuser
 (
@@ -64,6 +68,7 @@ create table xnovel
     completionstatus TINYTEXT,
     updatedchapter TINYTEXT,
     introduction TEXT,
+    kind TINYTEXT,
     PRIMARY KEY (type)
 );
 
@@ -73,4 +78,17 @@ create table xreplyhollow
     user_id BIGINT,
     hollow_id BIGINT,
     PRIMARY KEY (hollow_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+create table xtv
+(
+    name varchar(255),
+    type TINYTEXT,
+    ranks DOUBLE,
+    detailpage TINYTEXT,
+    image TINYTEXT,
+    info TEXT,
+    description TEXT,
+    PRIMARY KEY (name)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

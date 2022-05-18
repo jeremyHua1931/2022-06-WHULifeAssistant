@@ -68,3 +68,6 @@ interface MovieMapper : BaseMapper<Movie>
 
 @Component
 interface NovelMapper : BaseMapper<Novel>
+
+@Component
+interface TVMapper: BaseMapper<TV>
