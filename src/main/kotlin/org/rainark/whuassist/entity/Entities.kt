@@ -50,7 +50,7 @@ class ReplyHollowMsg(
 
 @TableName("xnovel")
 class Novel(
-    @TableId(type = IdType.AUTO)
+    @TableId
     val type:String,
     val choice:String,
     val ranks:Int,
@@ -69,7 +69,7 @@ class Novel(
 
 @TableName("xmovie")
 class Movie(
-    @TableId(type = IdType.AUTO)
+    @TableId
     val name:String,
     val ranks:Double,
     val detailpage:String,
@@ -83,7 +83,7 @@ class Movie(
 
 @TableName("xtv")
 class TV(
-    @TableId(type=IdType.AUTO)
+    @TableId
     val name:String,
     val ranks:Double,
     val detailpage: String,

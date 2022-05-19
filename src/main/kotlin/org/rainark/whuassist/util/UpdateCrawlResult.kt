@@ -53,9 +53,9 @@ class UpdateCrawlResult {
     @Scheduled(cron = "0 */5 * * * ?")
     fun updateCrawlToMySQL() {
         if (recordCount == 0) {
-            println("初始化数据库中......")
+            println("Init database at startup......")
         } else {
-            println("第 $recordCount 次更新数据库中......")
+            println("Update database for the $recordCount time......")
         }
         recordCount++
         println("Start to update recommended list and it takes about twenty seconds...." + "       " + LocalDateTime.now())
