@@ -38,7 +38,7 @@ public class TVNetUtil {
      *                      detail information requires extra http requests.
      */
 
-    public static ArrayList<TV> getTVs(int offset, int len, boolean resolveDetail) throws IOException {
+    public static ArrayList<TV> getTVs(int offset, int len, boolean resolveDetail, String crawlTime) throws IOException {
 
         URL request = new URL(INDEX_REQUEST_URL + "&" + PAGE_OFFSET + "=" + offset + "&" + PAGE_MAX + "=" + (offset + len * 2));
 //        System.out.println(request);
@@ -79,7 +79,7 @@ public class TVNetUtil {
                     flag = 1;
                     nullCount++;
                 } else {
-                    TV temp = new TV(name, ranks, detailPage, image, " ", " ", "TV");
+                    TV temp = new TV(name, crawlTime, ranks, detailPage, image, res0[0], res0[1], "TV");
                     result.add(temp);
                 }
             }

@@ -1,6 +1,7 @@
 package org.rainark.whuassist.exception
 
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.alibaba.fastjson.serializer.SerializerFeature
 import org.slf4j.LoggerFactory
@@ -9,7 +10,6 @@ import kotlin.reflect.KProperty
 enum class ResponseCode(val msg : String) {
     SUCCESS("操作成功"),
     BATCH_OP_OK("检查通过"),
-    MESSAGE_PUSH("消息推送"),
 
     TOKEN_EXPIRED("JWT token过期"),
     TOKEN_INVALID("JWT token无效"),
@@ -18,7 +18,6 @@ enum class ResponseCode(val msg : String) {
     REQUEST_METHOD_NOT_SUPPORTED("请求的方法不支持"),
     TARGET_NOT_FOUND("操作对象不存在"),
     METHOD_NOT_FOUND("操作方法不存在"),
-    USER_OFFLINE("用户离线"),
     ILLEGAL_PARAMETER("参数错误"),
     PARAMETER_MISSING("缺少参数"),
     BAD_CREDENTIALS("密码错误"),
@@ -55,9 +54,6 @@ fun simpleErrorResponse(status : ResponseCode, msg : String? = null, data : JSON
 
 fun simpleErrorResponse(status : ResponseCode, msg : String? = null, vararg data : Pair<Any, Any>) : String
         = simpleErrorResponse(status, msg, processPairVararg(data))
-
-fun messagePush(vararg data : Pair<Any, Any>) : String
-        = simpleErrorResponse(ResponseCode.MESSAGE_PUSH, null, *data)
 
 fun cascadeResponse(code : Int, msg : String, data : JSON) : String
         = JSONObject().apply {

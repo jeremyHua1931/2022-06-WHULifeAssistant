@@ -54,7 +54,7 @@ public class NovelNetUtil {
      * result=getNovels(10, "mm", "yuepiao","")
      * result=getNovels(10, "mm", "recom","")
      */
-    public static ArrayList<Novel> getNovels(int len, String gender, String novelChoice, String time) throws IOException {
+    public static ArrayList<Novel> getNovels(int len, String gender, String novelChoice, String time, String crawTime) throws IOException {
 
         ArrayList<Novel> result = new ArrayList<>();
         String crawlType = gender + novelChoice;
@@ -66,7 +66,6 @@ public class NovelNetUtil {
         if (!time.equals("")) {
             selectTime = spiltTime(time);
         } else {
-
             SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
             sdf.applyPattern("yyyy-MM-dd");// a为am/pm的标记
             Date date = new Date();// 获取当前时间
@@ -122,7 +121,7 @@ public class NovelNetUtil {
                 String url21 = "https:" + url2;
 
                 String key0 = gender + novelChoice + Integer.toString(count);
-                Novel novelTmp = new Novel(key0, crawlType, count + 1, name, author, url11, url21, category, subcategory, completionStatus, update, introduction, "novel");
+                Novel novelTmp = new Novel(key0, crawlType, crawTime, count + 1, name, author, url11, url21, category, subcategory, completionStatus, update, introduction);
                 result.add(novelTmp);
 
                 totalNumber++;

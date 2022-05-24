@@ -1,12 +1,11 @@
 package org.rainark.whuassist.mapper
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
 import org.apache.ibatis.annotations.Select
-import org.rainark.whuassist.entity.*
+import org.apache.ibatis.annotations.Update
 import org.rainark.whuassist.entity.*
 import org.springframework.stereotype.Component
-import java.util.Date
+import java.util.*
 
 @Component
 interface UserMapper : BaseMapper<User>
@@ -54,20 +53,47 @@ interface AgainstHollowMapper<T> : BaseMapper<T>{
 
 @Component
 interface ReplyHollowMsgMapper<T> : BaseMapper<T>{
-    @Select("SELECT xhollow.hollow_id,time,content,under_post_id," +
-            "reply_post_id,belong_to,username,image " +
-            "FROM (xhollow JOIN xuser ON belong_to = xuser.user_id) " +
-            "JOIN xreplyhollow ON xreplyhollow.hollow_id = xhollow.hollow_id " +
-            "WHERE (time < #{time} AND xreplyhollow.user_id = #{user_id}) " +
-            "ORDER BY time DESC LIMIT 10")
-    fun replyHollowSelect(time : Date,user_id : Long) : List<ReplyHollow>
+    @Select(
+        "SELECT xhollow.hollow_id,time,content,under_post_id," +
+                "reply_post_id,belong_to,username,image " +
+                "FROM (xhollow JOIN xuser ON belong_to = xuser.user_id) " +
+                "JOIN xreplyhollow ON xreplyhollow.hollow_id = xhollow.hollow_id " +
+                "WHERE (time < #{time} AND xreplyhollow.user_id = #{user_id}) " +
+                "ORDER BY time DESC LIMIT 10"
+    )
+    fun replyHollowSelect(time: Date, user_id: Long): List<ReplyHollow>
 }
 
 @Component
-interface MovieMapper : BaseMapper<Movie>
+interface MovieMapper : BaseMapper<Movie> {
+    @Update("TRUNCATE TABLE xmovie;")
+    fun truncate()
+}
 
 @Component
-interface NovelMapper : BaseMapper<Novel>
+interface MovieAllMapper : BaseMapper<MovieAll>
 
 @Component
-interface TVMapper: BaseMapper<TV>
+interface NovelMapper : BaseMapper<Novel> {
+    @Update("TRUNCATE TABLE xnovel;")
+    fun truncate()
+}
+
+@Component
+interface NovelALLMapper : BaseMapper<NovelALL> {
+}
+
+@Component
+interface TVMapper : BaseMapper<TV>
+
+@Component
+interface TVAllMapper : BaseMapper<TVAll>
+
+@Component
+interface NovelAttitudeMapper : BaseMapper<NovelAttitude>
+
+@Component
+interface MovieAttitudeMapper : BaseMapper<MovieAttitude>
+
+@Component
+interface TVAttitudeMapper : BaseMapper<TVAttitude>
