@@ -42,3 +42,12 @@ class ReplyHollow(
     var username : String, //todo（）后面需要改成hollowname
     var image : String
 )
+
+class ReportGroup(
+    var groupId : Long,
+    var userId : Long,
+    var username: String,
+    var groupName: String,
+    var reportText : String,
+    var reportNum : Int
+)

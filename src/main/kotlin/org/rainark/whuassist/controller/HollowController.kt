@@ -56,7 +56,6 @@ class HollowController {
         val hollowThis = hollowMapper.selectOne(QueryWrapper<Hollow>()
             .eq("belong_to",belong_to)
             .eq("time",time))
-        hollowAttitudeMapper.insert(HollowAttitude(belong_to,hollowThis.hollowId,0,0,0))
         if(reply_post_id.toInt() != 0){
             val replyHollow = hollowMapper.selectOne(QueryWrapper<Hollow>().eq("hollow_id",reply_post_id))
                 ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"回复的帖子不存在或者已删除")
@@ -88,11 +87,14 @@ class HollowController {
     @PostMapping("/hollow/support")
     fun hollowSupport(@JsonParam userId:Long,
                       @JsonParam hollowId:Long):String{
+        if(userMapper.selectOne(QueryWrapper<User>().eq("user_id",userId)) == null)
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请求用户异常")
+        val hollow = hollowMapper.selectOne(QueryWrapper<Hollow>().eq("hollow_id",hollowId))
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"点赞的帖子不存在")
         val hollowAttitude = hollowAttitudeMapper.selectOne(QueryWrapper<HollowAttitude>()
             .eq("user_id",userId)
             .eq("hollow_id",hollowId))
-        val hollow = hollowMapper.selectOne(QueryWrapper<Hollow>().eq("hollow_id",hollowId))
-            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"点赞的帖子不存在")
+            ?: HollowAttitude(userId,hollowId,0,0,0)
         if(hollowAttitude.support_attitude.toInt() == 1){
             hollow.support_num--
             hollowMapper.update(hollow,UpdateWrapper<Hollow>().eq("hollow_id",hollowId))
@@ -105,9 +107,15 @@ class HollowController {
             hollow.support_num++
             hollowMapper.update(hollow,UpdateWrapper<Hollow>().eq("hollow_id",hollowId))
             hollowAttitude.support_attitude = 1
-            hollowAttitudeMapper.update(hollowAttitude,UpdateWrapper<HollowAttitude>()
-                .eq("user_id",userId)
-                .eq("hollow_id",hollowId))
+            if(hollowAttitudeMapper.exists(QueryWrapper<HollowAttitude>()
+                    .eq("user_id",userId)
+                    .eq("hollow_id",hollowId))){
+                hollowAttitudeMapper.update(hollowAttitude,UpdateWrapper<HollowAttitude>()
+                    .eq("user_id",userId)
+                    .eq("hollow_id",hollowId))
+            }else{
+                hollowAttitudeMapper.insert(hollowAttitude)
+            }
             return simpleMsgResponse(0,"成功点赞")
         }
     }
@@ -115,11 +123,14 @@ class HollowController {
     @PostMapping("/hollow/comfort")
     fun hollowComfort(@JsonParam userId:Long,
                       @JsonParam hollowId:Long):String{
+        val hollow = hollowMapper.selectOne(QueryWrapper<Hollow>().eq("hollow_id",hollowId))
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"安慰的帖子不存在")
+        if(userMapper.selectOne(QueryWrapper<User>().eq("user_id",userId)) == null)
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请求用户异常")
         val hollowAttitude = hollowAttitudeMapper.selectOne(QueryWrapper<HollowAttitude>()
             .eq("user_id",userId)
             .eq("hollow_id",hollowId))
-        val hollow = hollowMapper.selectOne(QueryWrapper<Hollow>().eq("hollow_id",hollowId))
-            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"安慰的帖子不存在")
+            ?: HollowAttitude(userId,hollowId,0,0,0)
         if(hollowAttitude.comfort_attitude.toInt() == 1){
             hollow.comfort_num--
             hollowMapper.update(hollow,UpdateWrapper<Hollow>().eq("hollow_id",hollowId))
@@ -132,9 +143,15 @@ class HollowController {
             hollow.comfort_num++
             hollowMapper.update(hollow,UpdateWrapper<Hollow>().eq("hollow_id",hollowId))
             hollowAttitude.comfort_attitude = 1
-            hollowAttitudeMapper.update(hollowAttitude,UpdateWrapper<HollowAttitude>()
-                .eq("user_id",userId)
-                .eq("hollow_id",hollowId))
+            if(hollowAttitudeMapper.exists(QueryWrapper<HollowAttitude>()
+                    .eq("user_id",userId)
+                    .eq("hollow_id",hollowId))){
+                hollowAttitudeMapper.update(hollowAttitude,UpdateWrapper<HollowAttitude>()
+                    .eq("user_id",userId)
+                    .eq("hollow_id",hollowId))
+            }else{
+                hollowAttitudeMapper.insert(hollowAttitude)
+            }
             return simpleMsgResponse(0,"成功安慰")
         }
     }
@@ -142,26 +159,29 @@ class HollowController {
     @PostMapping("/hollow/against")
     fun hollowAgainst(@JsonParam userId: Long,
                       @JsonParam hollowId: Long):String{
+        val hollow = hollowMapper.selectOne(QueryWrapper<Hollow>().eq("hollow_id",hollowId))
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"安慰的帖子不存在")
+        if(userMapper.selectOne(QueryWrapper<User>().eq("user_id",userId)) == null)
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请求用户异常")
         val hollowAttitude = hollowAttitudeMapper.selectOne(QueryWrapper<HollowAttitude>()
             .eq("user_id",userId)
             .eq("hollow_id",hollowId))
-        val hollow = hollowMapper.selectOne(QueryWrapper<Hollow>().eq("hollow_id",hollowId))
-            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"安慰的帖子不存在")
+            ?: HollowAttitude(userId,hollowId,0,0,0)
         if(hollowAttitude.against_attitude.toInt() == 1){
-            hollow.against_num--
-            hollowMapper.update(hollow,UpdateWrapper<Hollow>().eq("hollow_id",hollowId))
-            hollowAttitude.against_attitude = 0
-            hollowAttitudeMapper.update(hollowAttitude,UpdateWrapper<HollowAttitude>()
-                .eq("user_id",userId)
-                .eq("hollow_id",hollowId))
-            return simpleMsgResponse(0,"举报已取消")
+            return simpleMsgResponse(0,"已经举报啦")
         }else{
             hollow.against_num++
             hollowMapper.update(hollow,UpdateWrapper<Hollow>().eq("hollow_id",hollowId))
             hollowAttitude.against_attitude = 1
-            hollowAttitudeMapper.update(hollowAttitude,UpdateWrapper<HollowAttitude>()
-                .eq("user_id",userId)
-                .eq("hollow_id",hollowId))
+            if(hollowAttitudeMapper.exists(QueryWrapper<HollowAttitude>()
+                    .eq("user_id",userId)
+                    .eq("hollow_id",hollowId))){
+                hollowAttitudeMapper.update(hollowAttitude,UpdateWrapper<HollowAttitude>()
+                    .eq("user_id",userId)
+                    .eq("hollow_id",hollowId))
+            }else{
+                hollowAttitudeMapper.insert(hollowAttitude)
+            }
             return simpleMsgResponse(0,"成功举报")
         }
     }

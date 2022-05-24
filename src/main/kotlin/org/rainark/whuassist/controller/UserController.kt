@@ -2,6 +2,7 @@ package org.rainark.whuassist.controller
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import org.rainark.whuassist.config.JsonParam
+import org.rainark.whuassist.entity.Group
 import org.rainark.whuassist.entity.ReplyHollowMsg
 import org.rainark.whuassist.entity.ReturnHollow
 import org.rainark.whuassist.entity.User
@@ -9,10 +10,7 @@ import org.rainark.whuassist.exception.RequestException
 import org.rainark.whuassist.exception.ResponseCode
 import org.rainark.whuassist.exception.cascadeSuccessResponse
 import org.rainark.whuassist.exception.simpleSuccessResponse
-import org.rainark.whuassist.mapper.ReplyHollowMapper
-import org.rainark.whuassist.mapper.ReplyHollowMsgMapper
-import org.rainark.whuassist.mapper.ReturnHollowMapper
-import org.rainark.whuassist.mapper.UserMapper
+import org.rainark.whuassist.mapper.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
@@ -27,6 +25,8 @@ class UserController {
     lateinit var replyHollowMapper: ReplyHollowMapper
     @Autowired
     lateinit var replyHollowMsgMapper: ReplyHollowMsgMapper<ReturnHollow>
+    @Autowired
+    lateinit var groupMapper: GroupMapper
 
     @PostMapping("/user/register")
     fun register(@JsonParam wechatId : String,
@@ -73,4 +73,16 @@ class UserController {
         val count : Long = replyHollowMapper.selectCount(QueryWrapper<ReplyHollowMsg>().eq("user_id",userId))
         return simpleSuccessResponse("number" to count)
     }
+
+    /**
+     * 查看用户自己发布的群
+     */
+    @PostMapping("/user/findGroup")
+    fun userGroupList(@JsonParam userId: Long) : String{
+        val groupList = groupMapper.selectList(QueryWrapper<Group>()
+            .eq("post_id",userId))
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"不存在的用户")
+        return cascadeSuccessResponse(groupList)
+    }
+
 }

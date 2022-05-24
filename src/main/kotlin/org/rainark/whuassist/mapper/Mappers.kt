@@ -1,5 +1,6 @@
 package org.rainark.whuassist.mapper
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
 import org.apache.ibatis.annotations.Select
 import org.apache.ibatis.annotations.Update
@@ -97,3 +98,19 @@ interface MovieAttitudeMapper : BaseMapper<MovieAttitude>
 
 @Component
 interface TVAttitudeMapper : BaseMapper<TVAttitude>
+
+@Component
+interface GroupMapper : BaseMapper<Group>
+
+@Component
+interface GroupAttitudeMapper : BaseMapper<GroupAttitude>
+
+@Component
+interface ReportGroupMapper<T> : BaseMapper<T>{
+    @Select("SELECT xgroup.group_id,xuser.user_id,username,xgroup.name AS group_name," +
+            "report_text,report_num " +
+            "FROM (xgattitude JOIN xuser ON xgattitude.user_id = xuser.user_id) " +
+            "JOIN xgroup ON xgroup.group_id = xgattitude.group_id " +
+            "WHERE  report_num > 19 ORDER BY group_id")
+    fun reportSelect() : List<ReportGroup>
+}

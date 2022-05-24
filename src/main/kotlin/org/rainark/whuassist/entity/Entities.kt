@@ -3,6 +3,8 @@ package org.rainark.whuassist.entity
 import com.baomidou.mybatisplus.annotation.IdType
 import com.baomidou.mybatisplus.annotation.TableId
 import com.baomidou.mybatisplus.annotation.TableName
+import org.rainark.whuassist.exception.RequestException
+import org.rainark.whuassist.exception.ResponseCode
 
 @TableName("xuser")
 class User(
@@ -16,6 +18,7 @@ class User(
     var mbti: Short = 0
     var image: String = ""
     var personality: String = "unkown"
+    var competence : Int = 0
 }
 
 @TableName("xhollow")
@@ -389,3 +392,50 @@ class TVAll(
     var unestp: Int = 0
     var unesfp: Int = 0
 }
+
+@TableName("xgroup")
+class Group(
+    @TableId (type = IdType.AUTO) var groupId : Long,
+    var postId : Long,
+    var name: String,
+    var number : String,
+    var qrCode : String,
+    var introduction: String,
+    var reportNum : Int
+
+){
+    public fun checkValid(){
+        if(name == ""){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请输入非空的群名")
+        }
+        if(name.length > 19){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"群名输入过长")
+        }
+        if(number == ""){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请输入非空的群号")
+        }
+        if(number.length > 19){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"群号输入过长，请输入有效的群号")
+        }
+        if(qrCode == ""){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"群描述不能为空")
+        }
+        if(qrCode.length > 99){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"群描述过长，群描述不能超过100字符")
+        }
+        if(introduction == ""){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请输入非空的群描述")
+        }
+        if(introduction.length > 255){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"群描述不能超过255个字符")
+        }
+    }
+}
+
+@TableName("xgattitude")
+class GroupAttitude(
+    var userId: Long,
+    var groupId : Long,
+    var report_attitude : Short,
+    var reportText : String
+)

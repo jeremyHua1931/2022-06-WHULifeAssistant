@@ -2,8 +2,6 @@ drop table if exists xuser;
 drop table if exists xhollow;
 drop table if exists xhattitude;
 drop table if exists xreplyhollow;
-drop table if exists xmovie;
-drop table if exists xmovieall;
 drop table if exists xtv;
 drop table if exists xtvall;
 drop table if exists xnovel;
@@ -11,6 +9,8 @@ drop table if exists xnovelall;
 drop table if exists novelattitude;
 drop table if exists movieattitude;
 drop table if exists tvattitude;
+drop table if exists xgroup;
+drop table if exists xgattitude;
 
 
 create table xuser
@@ -23,9 +23,10 @@ create table xuser
     hollow_name varchar(20),
     mbti        MEDIUMINT,
     image       varchar(100),
+    personality varchar(40),
+    competence INT,
     PRIMARY KEY (user_id)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 create table xhollow
 (
@@ -63,6 +64,8 @@ create table xreplyhollow
 
 #xmovie table only records the current popular movies
 #xmovie all table only records high score movies. If the popular movies are new high scores, update this table
+drop table if exists xmovie;
+drop table if exists xmovieall;
 create table xmovie
 (
     name             varchar(255),
@@ -160,6 +163,27 @@ create table xmovieall
     PRIMARY KEY (type)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
+
+create table xgroup
+(
+    group_id BIGINT NOT NULL AUTO_INCREMENT,
+    post_id BIGINT,
+    name varchar(20),
+    number varchar(20),
+    qr_code varchar(100),
+    introduction TINYTEXT,
+    report_num INT,
+    PRIMARY KEY(group_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table xgattitude
+(
+    user_id BIGINT,
+    group_id BIGINT,
+    report_attitude MEDIUMINT,
+    report_text TINYTEXT
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 # xnovel table only records the latest list details
