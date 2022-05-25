@@ -69,15 +69,25 @@ interface ReplyHollowMsgMapper<T> : BaseMapper<T>{
 interface MovieMapper : BaseMapper<Movie> {
     @Update("TRUNCATE TABLE xmovie;")
     fun truncate()
+
+    @Select("select * from xmovie;")
+    fun selectAll(): List<Movie>
 }
 
 @Component
-interface MovieAllMapper : BaseMapper<MovieAll>
+interface MovieAllMapper : BaseMapper<MovieAll> {
+    @Select("select * from xmovieall;")
+    fun selectAll(): List<Movie>
+}
+
 
 @Component
 interface NovelMapper : BaseMapper<Novel> {
     @Update("TRUNCATE TABLE xnovel;")
     fun truncate()
+
+    @Select("select * from xnovel;")
+    fun selectAll(): List<Novel>
 }
 
 @Component

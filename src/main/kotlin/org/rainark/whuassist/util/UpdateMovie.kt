@@ -19,24 +19,25 @@ class UpdateMovie {
 
     companion object {
         var recordCount: Int = 0
-        var updateTimeNew: String = LocalDateTime.now().toString()
-        var updateTimeOld: String = LocalDateTime.now().toString()
+        var updateTimeNew: String = "hot"
+        var updateTimeOld: String = "hot"
     }
 
     fun updateMovie() {
-        updateTimeNew = LocalDateTime.now().toString()
 
         println("${LocalDateTime.now()}  Start to update Movie List....")
         //初始化总表
-        if (recordCount == 0) {
+
+        var movieJudge = movieAllMapper.selectAll()
+        if (recordCount == 0 && movieJudge.size == 0) {
             var resultMovie: ArrayList<Movie>
 //            resultMovie = MovieNetUtil.getMovies(0, 20, true,true)
             println("${LocalDateTime.now()}  Start to craw  moives whoese ranks >=7.5 .....")
-            resultMovie = MovieNetUtil.getMovies(0, 500, true, true, updateTimeNew)
+            resultMovie = MovieNetUtil.getMovies(0, 20, true, true, "old")
             println("${LocalDateTime.now()}  Start to init MovieALL Table....." + "       " + LocalDateTime.now())
             for (x in resultMovie) {
                 var MovieALL =
-                    MovieAll(x.name, x.crawltime, x.ranks, x.info, x.description, x.detailpage, x.image, x.type)
+                    MovieAll(x.name, x.crawltime, x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
                 try {
                     movieAllMapper.insert(MovieALL)
                 } catch (e: org.springframework.dao.DuplicateKeyException) {
@@ -47,14 +48,14 @@ class UpdateMovie {
         }
 
         //清空之前 : 将高分热门电影的推荐数据更新到总表--->高分热门电影必定已在总表记录(具体见下面第三部分)
-        var movieOld = movieMapper.selectList(QueryWrapper<Movie>().eq("crawltime", updateTimeOld))
+        var movieOld = movieMapper.selectAll()
         if (movieOld.size != 0) {
             for (x in movieOld) {
                 if (x.ranks >= 7.5) {
                     var tmp: String = x.name + x.ranks.toString()
                     var MovieAllTmp = movieAllMapper.selectList(QueryWrapper<MovieAll>().eq("type", tmp))
                     if (MovieAllTmp.size == 1) {
-                        MovieAllTmp[0].crawltime = x.crawltime
+                        MovieAllTmp[0].crawltime = "old"
                         MovieAllTmp[0].recommendtotal = x.recommendtotal
                         MovieAllTmp[0].unrecommendtotal = x.unrecommendtotal
                         MovieAllTmp[0].intj = x.intj
@@ -107,7 +108,7 @@ class UpdateMovie {
                 var MovieAllTmp = movieAllMapper.selectList(QueryWrapper<MovieAll>().eq("name", x.name))
                 if (MovieAllTmp.size == 0) {
                     var MovieAllNew =
-                        MovieAll(x.name, x.crawltime, x.ranks, x.info, x.description, x.detailpage, x.image, x.type)
+                        MovieAll(x.name, "old", x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
                     try {
                         movieAllMapper.insert(MovieAllNew)
                     } catch (e: org.springframework.dao.DuplicateKeyException) {
@@ -116,7 +117,7 @@ class UpdateMovie {
                 } else if (MovieAllTmp.size == 1) {
                     println("${LocalDateTime.now()} : movieall table has this novel: ${x.name} ")
 
-                    MovieAllTmp[0].crawltime = x.crawltime
+                    MovieAllTmp[0].crawltime = "old"
                     movieAllMapper.updateById(MovieAllTmp[0])
 
                     x.recommendtotal = MovieAllTmp[0].recommendtotal
@@ -161,7 +162,6 @@ class UpdateMovie {
                 println("Duplicate key: update movie table")
             }
         }
-        updateTimeOld = updateTimeNew
         println("${LocalDateTime.now()} : movie list has been completed !")
     }
 }

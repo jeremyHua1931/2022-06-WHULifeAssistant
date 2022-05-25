@@ -59,7 +59,6 @@ public class MovieNetUtil {
         ArrayList<Movie> result = new ArrayList<>();
 
         JSONObject tobject;
-        int count = 0;
         for (int i = 0; i < len; i++) {
             tobject = list.getJSONObject(i);
             //The '/' symbols in the response JSON is represented as '\/', so it's necessary to replace back before use.
@@ -76,16 +75,9 @@ public class MovieNetUtil {
             }
             String keytmp = name + ranks;
             Movie temp = new Movie(name, crawlTime, ranks, detailPage, image, res0[0], res0[1], keytmp);
-
-            if (i % 5 == 0) {
-                if (count % 5 == 0) {
-                    System.out.println(((i + 1) * 100 / len) + "%  ");
-                }
-                count++;
-            }
             result.add(temp);
         }
-        System.out.print("\n");
+
         return result;
     }
 

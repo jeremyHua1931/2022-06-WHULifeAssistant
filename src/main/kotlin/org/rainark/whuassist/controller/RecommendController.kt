@@ -53,6 +53,9 @@ class RecommendController {
     @Autowired
     lateinit var novelALLMapper: NovelALLMapper
 
+    @Autowired
+    lateinit var movieAllMapper: MovieAllMapper
+
     @PostMapping("/recom/refresh")
     fun crawlRefresh(@JsonParam msg: String): String {
         updateCrawlResult.updateCrawlToMySQL()
@@ -91,8 +94,23 @@ class RecommendController {
         @JsonParam msg: String,
         @JsonParam wechatid: String
     ): String {
-        var movieList = movieMapper.selectList(QueryWrapper<Movie>().orderByDesc("ranks"));
+        var movieList = movieMapper.selectList(QueryWrapper<Movie>().orderByDesc("ranks").eq("crawltime", "hot"));
+        var movieAllList = movieAllMapper.selectList(QueryWrapper<MovieAll>().last("ORDER BY RAND() LIMIT 10"));
         val UserAttitude = movieAttitudeMapper.selectList(QueryWrapper<MovieAttitude>().eq("wechatid", wechatid))
+        movieAllList.sortWith(Comparator { movie, t1 ->
+            +
+            if (movie.ranks >= t1.ranks) -1 else {
+                1
+            }
+        })
+        for (x in movieAllList) {
+            movieList.add(movieTrans(x))
+            try {
+                movieMapper.insert(movieTrans(x))
+            } catch (e: org.springframework.dao.DuplicateKeyException) {
+                println("movie table already has this novel ")
+            }
+        }
         for (x in movieList) {
             for (y in UserAttitude) {
                 if (y.name == x.name && y.ranks == x.ranks) {
@@ -492,6 +510,44 @@ class RecommendController {
         return tv
     }
 
+    fun movieTrans(x: MovieAll): Movie {
+        var tmp = Movie(x.name, "old", x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
+        tmp.recommendtotal = x.recommendtotal
+        tmp.unrecommendtotal = x.unrecommendtotal
+        tmp.intj = x.intj
+        tmp.intp = x.intp
+        tmp.entj = x.entj
+        tmp.entp = x.entp
+        tmp.infj = x.infj
+        tmp.infp = x.infp
+        tmp.enfj = x.enfj
+        tmp.enfp = x.enfp
+        tmp.istj = x.istj
+        tmp.isfj = x.isfj
+        tmp.estj = x.estj
+        tmp.esfj = x.esfj
+        tmp.istp = x.istp
+        tmp.isfp = x.isfp
+        tmp.estp = x.estp
+        tmp.esfp = x.esfp
+        tmp.unintj = x.unintj
+        tmp.unintp = x.unintp
+        tmp.unentj = x.unentj
+        tmp.unentp = x.unentp
+        tmp.uninfj = x.uninfj
+        tmp.uninfp = x.uninfp
+        tmp.unenfj = x.unenfj
+        tmp.unenfp = x.unenfp
+        tmp.unistj = x.unistj
+        tmp.unisfj = x.unisfj
+        tmp.unestj = x.unestj
+        tmp.unesfj = x.unesfj
+        tmp.unistp = x.unistp
+        tmp.unisfp = x.unisfp
+        tmp.unestp = x.unestp
+        tmp.unesfp = x.unesfp
+        return tmp
+    }
 
 }
 
