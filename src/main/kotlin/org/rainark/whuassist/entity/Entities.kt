@@ -17,7 +17,6 @@ class User(
     var hollow_name: String = ""
     var mbti: Short = 0
     var image: String = ""
-    var personality: String = "unkown"
     var competence : Int = 0
 }
 

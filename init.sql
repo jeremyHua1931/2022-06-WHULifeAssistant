@@ -23,7 +23,6 @@ create table xuser
     hollow_name varchar(20),
     mbti        MEDIUMINT,
     image       varchar(100),
-    personality varchar(40),
     competence INT,
     PRIMARY KEY (user_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
