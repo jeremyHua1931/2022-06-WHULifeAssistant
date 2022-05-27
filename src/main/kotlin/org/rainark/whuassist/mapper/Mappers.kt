@@ -116,11 +116,19 @@ interface GroupMapper : BaseMapper<Group>
 interface GroupAttitudeMapper : BaseMapper<GroupAttitude>
 
 @Component
-interface ReportGroupMapper<T> : BaseMapper<T>{
-    @Select("SELECT xgroup.group_id,xuser.user_id,username,xgroup.name AS group_name," +
-            "report_text,report_num " +
-            "FROM (xgattitude JOIN xuser ON xgattitude.user_id = xuser.user_id) " +
-            "JOIN xgroup ON xgroup.group_id = xgattitude.group_id " +
-            "WHERE  report_num > 19 ORDER BY group_id")
-    fun reportSelect() : List<ReportGroup>
+interface ReportGroupMapper<T> : BaseMapper<T> {
+    @Select(
+        "SELECT xgroup.group_id,xuser.user_id,username,xgroup.name AS group_name," +
+                "report_text,report_num " +
+                "FROM (xgattitude JOIN xuser ON xgattitude.user_id = xuser.user_id) " +
+                "JOIN xgroup ON xgroup.group_id = xgattitude.group_id " +
+                "WHERE  report_num > 19 ORDER BY group_id"
+    )
+    fun reportSelect(): List<ReportGroup>
+}
+
+@Component
+interface MapMapper : BaseMapper<MapPosition> {
+    @Update("TRUNCATE TABLE map;")
+    fun truncate()
 }
