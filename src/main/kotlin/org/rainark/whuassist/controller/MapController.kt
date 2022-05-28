@@ -23,7 +23,7 @@ class MapController {
 
     @PostMapping("/map/all")
     fun getAll(@JsonParam msg: String): String {
-        var result = mapMapper.selectList(QueryWrapper<MapPosition>().eq("kind", "map"))
+        var result = mapMapper.selectList(QueryWrapper<MapPosition>().eq("kind", "map").orderByDesc("dates"))
         return cascadeSuccessResponse(result)
     }
 

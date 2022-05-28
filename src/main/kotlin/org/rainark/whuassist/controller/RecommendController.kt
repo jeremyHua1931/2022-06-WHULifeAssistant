@@ -67,6 +67,7 @@ class RecommendController {
         @JsonParam msg: String,
         @JsonParam wechatid: String
     ): String {
+//        println("Test : ${wechatid}")
         val novelListYuepiao = novelMapper.selectList(QueryWrapper<Novel>().orderByAsc("ranks").eq("choice", "yuepiao"))
         val novelListRecommend = novelMapper.selectList(QueryWrapper<Novel>().orderByAsc("ranks").eq("choice", "recom"))
         val novelListMMYuepiao =
@@ -108,7 +109,7 @@ class RecommendController {
             try {
                 movieMapper.insert(movieTrans(x))
             } catch (e: org.springframework.dao.DuplicateKeyException) {
-                println("movie table already has this novel ")
+                println("movie table already has this novel : ${x.name}")
             }
         }
         for (x in movieList) {
