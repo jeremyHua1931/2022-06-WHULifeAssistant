@@ -33,7 +33,7 @@ class ReturnHollowP1(
     var support_num : Int,
     var comfort_num : Int,
     var username : String, //todo（）后面需要改成hollowname
-    var image : String,
+    var image: String
 )
 
 class AgainstHollow(

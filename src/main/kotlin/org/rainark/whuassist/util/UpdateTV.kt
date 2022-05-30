@@ -1,6 +1,7 @@
 package org.rainark.whuassist.util
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import org.rainark.whuassist.entity.MovieAll
 import org.rainark.whuassist.entity.TV
 import org.rainark.whuassist.entity.TVAll
 import org.rainark.whuassist.mapper.TVAllMapper
@@ -28,14 +29,36 @@ class UpdateTV {
         println("${LocalDateTime.now()} : Start to update TV list....")
         updateTimeNew = LocalDateTime.now().toString()
 
-        var resultTVOld = tvMapper.selectList(QueryWrapper<TV>().eq("type", "TV"))
+        var tvJudge = tvAllMapper.selectList(QueryWrapper<TVAll>().eq("crawltime", "old"))
+        if (recordCount == 0 && tvJudge.size == 0) {
+            println("${LocalDateTime.now()}  Start to craw  TVs  .....")
+            var resultTV = TVNetUtil.getTVs(0, 20, true, "old", true)
+            println("${LocalDateTime.now()}  Start to init TVALL Table....." + "       " + LocalDateTime.now())
+            for (x in resultTV) {
+                if (x.ranks >= 7.5) {
+                    var TVALL =
+                        TVAll(x.name, x.crawltime, x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
+                    try {
+                        tvAllMapper.insert(TVALL)
+                    } catch (e: org.springframework.dao.DuplicateKeyException) {
+                        println("Duplicate key : " + x.name)
+                    }
+                }
+            }
+            recordCount++;
+        }
+
+
+        var resultTVOld = tvMapper.selectList(QueryWrapper<TV>().eq("crawltime", "old"))
+        var resultTVOld2 = tvMapper.selectList(QueryWrapper<TV>().eq("crawltime", "new"))
+        resultTVOld.addAll(resultTVOld2)
         //清空之前同步
         if (resultTVOld.size != 0) {
             for (x in resultTVOld) {
                 if (x.ranks >= 7.5) {
                     var resultTVOldTmp = tvAllMapper.selectList(QueryWrapper<TVAll>().eq("name", x.name))
                     if (resultTVOldTmp.size == 1) {
-                        resultTVOldTmp[0].crawltime = x.crawltime
+                        resultTVOldTmp[0].crawltime = "old"
                         resultTVOldTmp[0].recommendtotal = x.recommendtotal
                         resultTVOldTmp[0].unrecommendtotal = x.unrecommendtotal
                         resultTVOldTmp[0].intj = x.intj
@@ -78,16 +101,16 @@ class UpdateTV {
             println("${LocalDateTime.now()} : TVall table Init!! This occurs only during initialization")
         }
 
-        tvMapper.delete(QueryWrapper<TV>().eq("type", "TV"))
+        tvMapper.truncate()
 
-        var resultTVNew = TVNetUtil.getTVs(0, 10, true, updateTimeNew)
+        var resultTVNew = TVNetUtil.getTVs(0, 10, true, "new", false)
 
         for (x in resultTVNew) {
             if (x.ranks >= 7.5) {
                 var resultTVAllTmp = tvAllMapper.selectList(QueryWrapper<TVAll>().eq("name", x.name))
                 if (resultTVAllTmp.size == 0) {
                     var resultTVAllTMP =
-                        TVAll(x.name, x.crawltime, x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
+                        TVAll(x.name, "old", x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
                     try {
                         tvAllMapper.insert(resultTVAllTMP)
                     } catch (e: org.springframework.dao.DuplicateKeyException) {
@@ -95,9 +118,9 @@ class UpdateTV {
                     }
 
                 } else if (resultTVAllTmp.size == 1) {
-                    println("${LocalDateTime.now()} : tvall table has this novel: ${x.name} ")
+                    println("${LocalDateTime.now()} : tvall table has this tv: ${x.name} ")
 
-                    resultTVAllTmp[0].crawltime = x.crawltime
+                    resultTVAllTmp[0].crawltime = "old"
                     tvAllMapper.updateById(resultTVAllTmp[0])
 
                     x.recommendtotal = resultTVAllTmp[0].recommendtotal

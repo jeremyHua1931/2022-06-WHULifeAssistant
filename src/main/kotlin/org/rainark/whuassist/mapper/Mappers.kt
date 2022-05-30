@@ -115,10 +115,20 @@ interface NovelALLMapper : BaseMapper<NovelALL> {
 }
 
 @Component
-interface TVMapper : BaseMapper<TV>
+interface TVMapper : BaseMapper<TV> {
+    @Select("select * from xtv;")
+    fun selectAll(): List<TV>
+
+    @Update("TRUNCATE TABLE xtv;")
+    fun truncate()
+
+}
 
 @Component
-interface TVAllMapper : BaseMapper<TVAll>
+interface TVAllMapper : BaseMapper<TVAll> {
+    @Select("select * from xtvall;")
+    fun selectAll(): List<TVAll>
+}
 
 @Component
 interface NovelAttitudeMapper : BaseMapper<NovelAttitude>
@@ -152,3 +162,6 @@ interface MapMapper : BaseMapper<MapPosition> {
     @Update("TRUNCATE TABLE map;")
     fun truncate()
 }
+
+@Component
+interface NoticeMapper : BaseMapper<Notice> {}

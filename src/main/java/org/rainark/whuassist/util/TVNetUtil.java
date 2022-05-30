@@ -23,7 +23,7 @@ import java.util.ArrayList;
  */
 public class TVNetUtil {
     private static final String CHROME_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36";
-    private static final String INDEX_REQUEST_URL = "https://movie.douban.com/j/search_subjects?type=tv&tag=%E7%83%AD%E9%97%A8";
+    private static final String INDEX_REQUEST_URL = "https://movie.douban.com/j/search_subjects?type=tv&tag=";
     private static final String PAGE_OFFSET = "page_start";
     private static final String PAGE_MAX = "page_limit";
 
@@ -38,10 +38,15 @@ public class TVNetUtil {
      *                      detail information requires extra http requests.
      */
 
-    public static ArrayList<TV> getTVs(int offset, int len, boolean resolveDetail, String crawlTime) throws IOException {
+    public static ArrayList<TV> getTVs(int offset, int len, boolean resolveDetail, String crawlTime, boolean init) throws IOException {
 
-        URL request = new URL(INDEX_REQUEST_URL + "&" + PAGE_OFFSET + "=" + offset + "&" + PAGE_MAX + "=" + (offset + len * 2));
-//        System.out.println(request);
+        URL request = new URL(INDEX_REQUEST_URL + "&" + PAGE_OFFSET + "=" + offset + "&" + PAGE_MAX + "=" + (offset + len));
+        if (init) {
+            request = new URL(INDEX_REQUEST_URL + "%E7%83%AD%E9%97%A8&sort=rank" + "&" + PAGE_OFFSET + "=" + offset + "&" + PAGE_MAX + "=" + (offset + len));
+        } else {
+            request = new URL(INDEX_REQUEST_URL + "%E7%83%AD%E9%97%A8" + "&" + PAGE_OFFSET + "=" + offset + "&" + PAGE_MAX + "=" + (offset + len + 5));
+        }
+        System.out.println(request);
         HttpURLConnection connection = (HttpURLConnection) request.openConnection();
         connection.setRequestMethod("GET");
         connection.addRequestProperty("User-Agent", CHROME_AGENT);
@@ -52,38 +57,35 @@ public class TVNetUtil {
         JSONArray list = obj.getJSONArray("subjects");
         ArrayList<TV> result = new ArrayList<>();
 
-        JSONObject tobject;
-        int nullCount = 0;
-        int flag = 0;
-        int i = -1;
-        do {
-            i = i + 1;
-            flag = 0;
-            for (; i < len + nullCount; i++) {
-                tobject = list.getJSONObject(i);
-                //The '/' symbols in the response JSON is represented as '\/', so it's necessary to replace back before use.
-                String detailPage = tobject.getString("url");
-                String image = tobject.getString("cover");
-                Double ranks = tobject.getDouble("rate");
-                //The '/' in movie name will disturb poster file saving.
-                String name = tobject.getString("title").replace("/", "丨");
+        int count = 0;
 
-                String[] res0 = new String[2];
-                if (resolveDetail) {
-                    res0 = parseDetailPage(tobject.getString("url"));
-                }
-                if (ranks == null) {
-                    if (flag == 0) {
-                        nullCount = 0;
-                    }
-                    flag = 1;
-                    nullCount++;
-                } else {
-                    TV temp = new TV(name, crawlTime, ranks, detailPage, image, res0[0], res0[1], "TV");
-                    result.add(temp);
-                }
+        len = list.size();
+
+        JSONObject tobject;
+
+        for (int i = 0; i < len; i++) {
+            tobject = list.getJSONObject(i);
+            //The '/' symbols in the response JSON is represented as '\/', so it's necessary to replace back before use.
+            String detailPage = tobject.getString("url");
+            String image = tobject.getString("cover");
+            Double ranks = tobject.getDouble("rate");
+            //The '/' in movie name will disturb poster file saving.
+            String name = tobject.getString("title").replace("/", "丨");
+
+            String[] res0 = new String[2];
+            if (resolveDetail) {
+                res0 = parseDetailPage(tobject.getString("url"));
             }
-        } while (nullCount != 0 && flag == 1);
+
+            if (ranks != null) {
+                TV temp = new TV(name, crawlTime, ranks, detailPage, image, res0[0], res0[1], "TV");
+                result.add(temp);
+                count++;
+            }
+            if (count == 10 && init == false) {
+                return result;
+            }
+        }
         return result;
     }
 

@@ -23,3 +23,8 @@ mybatis-plus:
 server:
   port: 8081
 
+#配置路径
+
+file:
+  uploadQcFolder: C://user//jeremyhua//wechatWHU
+  uploadUserFolder: C://user//jeremyhua//wechatWHU

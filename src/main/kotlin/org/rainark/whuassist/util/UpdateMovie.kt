@@ -32,19 +32,21 @@ class UpdateMovie {
         if (recordCount == 0 && movieJudge.size == 0) {
             var resultMovie: ArrayList<Movie>
 //            resultMovie = MovieNetUtil.getMovies(0, 20, true,true)
-            println("${LocalDateTime.now()}  Start to craw  moives whoese ranks >=7.5 .....")
+            println("${LocalDateTime.now()}  Start to craw  moives  .....")
             resultMovie = MovieNetUtil.getMovies(0, 20, true, true, "old")
             println("${LocalDateTime.now()}  Start to init MovieALL Table....." + "       " + LocalDateTime.now())
             for (x in resultMovie) {
-                var MovieALL =
-                    MovieAll(x.name, x.crawltime, x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
-                try {
-                    movieAllMapper.insert(MovieALL)
-                } catch (e: org.springframework.dao.DuplicateKeyException) {
-                    println("Duplicate key : " + x.name)
+                if (x.ranks >= 7.5) {
+                    var MovieALL =
+                        MovieAll(x.name, x.crawltime, x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
+                    try {
+                        movieAllMapper.insert(MovieALL)
+                    } catch (e: org.springframework.dao.DuplicateKeyException) {
+                        println("Duplicate key : " + x.name)
+                    }
                 }
             }
-            recordCount++;
+            recordCount++
         }
 
         //清空之前 : 将高分热门电影的推荐数据更新到总表--->高分热门电影必定已在总表记录(具体见下面第三部分)
