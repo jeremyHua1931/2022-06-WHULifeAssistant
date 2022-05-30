@@ -20,6 +20,26 @@ interface HollowAttitudeMapper : BaseMapper<HollowAttitude>
 @Component
 interface ReplyHollowMapper : BaseMapper<ReplyHollowMsg>
 
+
+@Component
+interface ReturnHollowMapperP1<T> : BaseMapper<T> {
+    @Select("SELECT xhollow.hollow_id,time,content,under_post_id," +
+            "reply_post_id,belong_to,support_num,comfort_num,username,image " +
+            "FROM xhollow JOIN xuser ON belong_to = user_id " +
+            "WHERE (time < #{time} AND under_post_id = #{under_post_id}) " +
+            "ORDER BY time DESC " +
+            "LIMIT 10")
+    fun multiSelect(time : Date,under_post_id : Long) : List<ReturnHollowP1>
+
+    @Select("SELECT xhollow.hollow_id,time,content,under_post_id," +
+            "reply_post_id,belong_to,support_num,comfort_num,username,image " +
+            "FROM xhollow JOIN xuser ON belong_to = user_id " +
+            "WHERE (time < #{time} AND belong_to = #{user_id}) " +
+            "ORDER BY time DESC " +
+            "LIMIT 10")
+    fun myHollowSelect(time: Date,user_id: Long) : List<ReturnHollowP1>
+}
+
 @Component
 interface ReturnHollowMapper<T> : BaseMapper<T> {
     @Select("SELECT xhollow.hollow_id,time,content,under_post_id," +

@@ -6,10 +6,7 @@ import org.rainark.whuassist.entity.Group
 import org.rainark.whuassist.entity.ReplyHollowMsg
 import org.rainark.whuassist.entity.ReturnHollow
 import org.rainark.whuassist.entity.User
-import org.rainark.whuassist.exception.RequestException
-import org.rainark.whuassist.exception.ResponseCode
-import org.rainark.whuassist.exception.cascadeSuccessResponse
-import org.rainark.whuassist.exception.simpleSuccessResponse
+import org.rainark.whuassist.exception.*
 import org.rainark.whuassist.mapper.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
@@ -42,6 +39,15 @@ class UserController {
         val user = User(0,wechatId,username, phone, school)
         userMapper.insert(user)
         return simpleSuccessResponse()
+    }
+
+    @PostMapping("/user/login")
+    fun login(@JsonParam wechatId: String) : String{
+        if(wechatId == "")
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"不能使用的微信Id登录")
+        val user = userMapper.selectOne(QueryWrapper<User>().eq("wechat_id",wechatId))
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请使用有效的微信Id登录")
+        return simpleSuccessResponse("user" to user)
     }
 
     @PostMapping("/user/replyHollowList")

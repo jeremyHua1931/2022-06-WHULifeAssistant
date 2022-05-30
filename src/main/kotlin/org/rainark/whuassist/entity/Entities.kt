@@ -399,11 +399,11 @@ class Group(
     var postId : Long,
     var name: String,
     var number : String,
-    var qrCode : String,
     var introduction: String,
     var reportNum : Int
 
 ){
+    var qrCode : String = ""
     public fun checkValid(){
         if(name == ""){
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请输入非空的群名")
@@ -416,12 +416,6 @@ class Group(
         }
         if(number.length > 19){
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"群号输入过长，请输入有效的群号")
-        }
-        if(qrCode == ""){
-            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"群描述不能为空")
-        }
-        if(qrCode.length > 99){
-            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"群描述过长，群描述不能超过100字符")
         }
         if(introduction == ""){
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请输入非空的群描述")

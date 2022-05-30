@@ -32,7 +32,7 @@ class UpdateMovie {
             var resultMovie: ArrayList<Movie>
 //            resultMovie = MovieNetUtil.getMovies(0, 20, true,true)
             println("${LocalDateTime.now()}  Start to craw  moives whoese ranks >=7.5 .....")
-            resultMovie = MovieNetUtil.getMovies(0, 500, true, true, updateTimeNew)
+            resultMovie = MovieNetUtil.getMovies(0, 0, true, true, updateTimeNew)
             println("${LocalDateTime.now()}  Start to init MovieALL Table....." + "       " + LocalDateTime.now())
             for (x in resultMovie) {
                 var MovieALL =

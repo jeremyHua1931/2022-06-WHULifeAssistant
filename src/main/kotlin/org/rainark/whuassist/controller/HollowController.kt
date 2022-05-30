@@ -23,6 +23,8 @@ class HollowController {
     @Autowired
     lateinit var returnHollowMapper: ReturnHollowMapper<ReturnHollow>
     @Autowired
+    lateinit var returnHollowMapperP1: ReturnHollowMapperP1<ReturnHollowP1>
+    @Autowired
     lateinit var againstHollowMapper: AgainstHollowMapper<AgainstHollow>
     @Autowired
     lateinit var replyHollowMapper : ReplyHollowMapper
@@ -70,7 +72,27 @@ class HollowController {
                       @JsonParam userId: Long): String{
         if(userMapper.selectOne(QueryWrapper<User>().eq("user_id",userId)) == null)
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请求用户不存在")
-        val hollowList = returnHollowMapper.multiSelect(time,0,userId)
+        val returnListP1 = returnHollowMapperP1.multiSelect(time,0)
+        val hollowList : MutableList<ReturnHollow> = ArrayList()
+        returnListP1.forEach {
+            val attitude = hollowAttitudeMapper.selectOne(QueryWrapper<HollowAttitude>()
+                .eq("user_id",userId)
+                .eq("hollow_id",it.hollowId))
+                ?: HollowAttitude(userId,it.hollowId,0,0,0)
+            hollowList.add(ReturnHollow(it.hollowId,
+                                        it.time,
+                                        it.content,
+                                        it.under_post_id,
+                                        it.reply_post_id,
+                                        it.belong_to,
+                                        it.support_num,
+                                        it.comfort_num,
+                                        it.username,
+                                        it.image,
+                                        attitude.support_attitude,
+                                        attitude.comfort_attitude,
+                                        attitude.against_attitude))
+        }
         return cascadeSuccessResponse(hollowList)
     }
 
@@ -80,7 +102,27 @@ class HollowController {
                            @JsonParam userId: Long) :String{
         if(userMapper.selectOne(QueryWrapper<User>().eq("user_id",userId)) == null)
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请求用户不存在")
-        val hollowList = returnHollowMapper.multiSelect(time,under_post_id,userId)
+        val returnListP1 = returnHollowMapperP1.multiSelect(time,under_post_id)
+        val hollowList : MutableList<ReturnHollow> = ArrayList()
+        returnListP1.forEach {
+            val attitude = hollowAttitudeMapper.selectOne(QueryWrapper<HollowAttitude>()
+                .eq("user_id",userId)
+                .eq("hollow_id",it.hollowId))
+                ?: HollowAttitude(userId,it.hollowId,0,0,0)
+            hollowList.add(ReturnHollow(it.hollowId,
+                it.time,
+                it.content,
+                it.under_post_id,
+                it.reply_post_id,
+                it.belong_to,
+                it.support_num,
+                it.comfort_num,
+                it.username,
+                it.image,
+                attitude.support_attitude,
+                attitude.comfort_attitude,
+                attitude.against_attitude))
+        }
         return cascadeSuccessResponse(hollowList)
     }
 
@@ -197,8 +239,57 @@ class HollowController {
                         @JsonParam time: Date) : String{
         if(userMapper.selectOne(QueryWrapper<User>().eq("user_id",userId)) == null)
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请求用户不存在")
-        val hollowList = returnHollowMapper.myHollowSelect(time,userId)
+        val returnListP1 = returnHollowMapperP1.myHollowSelect(time,userId)
+        val hollowList : MutableList<ReturnHollow> = ArrayList()
+        returnListP1.forEach {
+            val attitude = hollowAttitudeMapper.selectOne(QueryWrapper<HollowAttitude>()
+                .eq("user_id",userId)
+                .eq("hollow_id",it.hollowId))
+                ?: HollowAttitude(userId,it.hollowId,0,0,0)
+            hollowList.add(ReturnHollow(it.hollowId,
+                it.time,
+                it.content,
+                it.under_post_id,
+                it.reply_post_id,
+                it.belong_to,
+                it.support_num,
+                it.comfort_num,
+                it.username,
+                it.image,
+                attitude.support_attitude,
+                attitude.comfort_attitude,
+                attitude.against_attitude))
+        }
         return cascadeSuccessResponse(hollowList)
+    }
+
+
+    @PostMapping("/hollow/getHollowById")
+    fun getHollowById(@JsonParam userId: Long,
+                      @JsonParam hollowId: Long) : String{
+        if(userMapper.selectOne(QueryWrapper<User>().eq("user_id",userId)) == null)
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请求用户不存在")
+        val hollow = hollowMapper.selectOne(QueryWrapper<Hollow>().eq("hollow_id",hollowId))
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"所请求帖子不存在或已被删除")
+        val belongUser = userMapper.selectOne(QueryWrapper<User>().eq("user_id",hollow.belong_to))
+        val attitude = hollowAttitudeMapper.selectOne(QueryWrapper<HollowAttitude>()
+            .eq("user_id",hollow.belong_to)
+            .eq("hollow_id",hollowId))
+            ?: HollowAttitude(userId,hollow.belong_to,0,0,0)
+        val returnHollow = ReturnHollow(hollow.hollowId,
+            hollow.time,
+            hollow.content,
+            hollow.under_post_id,
+            hollow.reply_post_id,
+            hollow.belong_to,
+            hollow.support_num,
+            hollow.comfort_num,
+            belongUser.username,
+            belongUser.image,
+            attitude.support_attitude,
+            attitude.comfort_attitude,
+            attitude.against_attitude)
+        return simpleSuccessResponse("result" to returnHollow)
     }
 
     @PostMapping("/hollow/deleteHollow")

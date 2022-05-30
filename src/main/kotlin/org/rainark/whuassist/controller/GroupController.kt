@@ -2,6 +2,7 @@ package org.rainark.whuassist.controller
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper
+import org.apache.tomcat.util.http.fileupload.IOUtils
 import org.rainark.whuassist.config.JsonParam
 import org.rainark.whuassist.entity.Group
 import org.rainark.whuassist.entity.GroupAttitude
@@ -13,8 +14,18 @@ import org.rainark.whuassist.mapper.GroupMapper
 import org.rainark.whuassist.mapper.ReportGroupMapper
 import org.rainark.whuassist.mapper.UserMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStream
+import javax.servlet.http.HttpServletResponse
+
 
 @RestController
 class GroupController {
@@ -28,17 +39,61 @@ class GroupController {
     @Autowired
     lateinit var reportGroupMapper: ReportGroupMapper<ReportGroup>
 
+    @Value("\${file.uploadQcFolder}")
+    private val uploadFolder: String? = null
+
     @PostMapping("/group/addgroup")
-    fun addGroup(@JsonParam postId : Long,
-                 @JsonParam name : String,
-                 @JsonParam number: String,
-                 @JsonParam qcCode : String,
-                 @JsonParam introduction : String) : String{
+    fun addGroup(@RequestParam postId : Long,
+                 @RequestParam name : String,
+                 @RequestParam number: String,
+                 @RequestParam file : MultipartFile,
+                 @RequestParam introduction : String) : String{
         if(userMapper.selectOne(QueryWrapper<User>().eq("user_id",postId)) == null)
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请求用户异常")
-        val groupNew = Group(0,postId,name,number,qcCode,introduction,0)
+        if(groupMapper.selectList(QueryWrapper<Group>()
+                .eq("name",name)
+                .eq("number",number)).isNotEmpty())
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"该群已存在请勿重复添加")
+
+        val groupNew = Group(0,postId,name,number,introduction,0)
         groupNew.checkValid()
         groupMapper.insert(groupNew)
+
+        val groupget = groupMapper.selectOne(QueryWrapper<Group>()
+            .eq("name",name)
+            .eq("number",number))
+        val groupId = groupget.groupId
+
+        val imageIn = file.bytes
+        if(file.isEmpty){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"传入的图片不能为空")
+        }
+        if(file.size > 1*1024*1024){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"传入图片过大")
+        }
+        val fileType = file.contentType
+        val types = ArrayList<String>()
+        types.add("image/jpeg")
+        types.add("image/png")
+        types.add("image/jpg")
+        if(fileType !in types){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"上传失败，不允许上传" + fileType + "类型的图片")
+        }
+
+        val fileName = file.originalFilename
+        val prefix: String = fileName?.substring(fileName.lastIndexOf(".") + 1) as String
+        print(file.name)
+        val fileExist = File("$uploadFolder$groupId.$prefix")
+        if(fileExist.exists()){
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"二维码已经上传过了")
+        }
+        val out = FileOutputStream("$uploadFolder$groupId.$prefix")
+        out.write(imageIn)
+        out.flush()
+        out.close()
+
+        groupget.qrCode = "$groupId.$prefix"
+        groupMapper.update(groupget,UpdateWrapper<Group>().eq("group_id",groupId))
         return simpleSuccessResponse()
     }
 
@@ -48,8 +103,8 @@ class GroupController {
     @PostMapping("/group/list")
     fun groupList(@JsonParam id : Long) :String{
         val groupList = groupMapper.selectList(QueryWrapper<Group>()
-            .orderBy(true,true,"post_id")
-            .gt("post_id",id)
+            .orderBy(true,true,"group_id")
+            .gt("group_id",id)
             .last("limit 10"))
         return cascadeSuccessResponse(groupList)
     }
@@ -97,6 +152,14 @@ class GroupController {
     fun deleteGroupById(@JsonParam groupId : String) :String{
         if(groupMapper.selectOne(QueryWrapper<Group>().eq("group_id",groupId))==null)
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"所删帖子不存在")
+
+        val group = groupMapper.selectOne(QueryWrapper<Group>().eq("group_id",groupId))
+        if(group.qrCode.isNotEmpty()) {
+            val fileExist = File("$uploadFolder${group.qrCode}")
+            if (fileExist.exists()) {
+                fileExist.delete()
+            }
+        }
         groupMapper.delete(QueryWrapper<Group>().eq("group_id",groupId))
         return simpleSuccessResponse("msg" to "删除成功")
     }
@@ -150,5 +213,29 @@ class GroupController {
     /**
      * 对用户进行封禁?
      */
+
+    @GetMapping("/group/image")
+    fun getImage(@RequestParam groupId: Long, response : HttpServletResponse){
+        val group = groupMapper.selectOne(QueryWrapper<Group>().eq("group_id",groupId))
+        if(group.qrCode.isEmpty())
+            throw RequestException(ResponseCode.TARGET_NOT_FOUND,"请求的二维码未上传")
+
+        val fileName = group.qrCode
+        val prefix: String = fileName?.substring(fileName.lastIndexOf(".") + 1) as String
+        print(prefix)
+        val fileExist = File("$uploadFolder${group.qrCode}")
+        print(fileExist)
+        if(!fileExist.exists()){
+            throw RequestException(ResponseCode.TARGET_NOT_FOUND,"请求的二维码不存在")
+        }
+        response.contentType = "image/$prefix"
+
+        val instream = FileInputStream(fileExist)
+        IOUtils.copy(instream,response.outputStream)
+
+
+    }
+
+
 
 }
