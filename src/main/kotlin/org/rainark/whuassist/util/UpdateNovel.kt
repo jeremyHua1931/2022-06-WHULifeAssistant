@@ -38,7 +38,7 @@ class UpdateNovel {
         //日常使用时,总表不发生改变, 只有novel发生改变(针对推荐数的变化)
 
         //1-将novel表推荐数同步至总表
-        var novelOld = novelMapper.selectList(QueryWrapper<Novel>().eq("crawltime", updateTimeOld))
+        var novelOld = novelMapper.selectAll()
         if (novelOld.size != 0) {
             for (x in novelOld) {
                 var typeOldTmp: String = x.name + x.author

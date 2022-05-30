@@ -11,7 +11,7 @@ drop table if exists movieattitude;
 drop table if exists tvattitude;
 drop table if exists xgroup;
 drop table if exists xgattitude;
-
+drop table if exists map;
 
 create table xuser
 (
@@ -23,7 +23,6 @@ create table xuser
     hollow_name varchar(20),
     mbti        MEDIUMINT,
     image       varchar(100),
-    personality varchar(40),
     competence INT,
     PRIMARY KEY (user_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -58,6 +57,21 @@ create table xreplyhollow
     user_id   BIGINT,
     hollow_id BIGINT,
     PRIMARY KEY (hollow_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+drop table if exists map;
+create table map
+(
+    primarykey varchar(500),
+    address    TEXT,
+    city       varchar(500),
+    dates      TEXT,
+    longitude  DOUBLE,
+    latitude   DOUBLE,
+    wechatid   TEXT,
+    kind       TEXT,
+    PRIMARY KEY (primarykey)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 

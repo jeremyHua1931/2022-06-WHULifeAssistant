@@ -89,15 +89,25 @@ interface ReplyHollowMsgMapper<T> : BaseMapper<T>{
 interface MovieMapper : BaseMapper<Movie> {
     @Update("TRUNCATE TABLE xmovie;")
     fun truncate()
+
+    @Select("select * from xmovie;")
+    fun selectAll(): List<Movie>
 }
 
 @Component
-interface MovieAllMapper : BaseMapper<MovieAll>
+interface MovieAllMapper : BaseMapper<MovieAll> {
+    @Select("select * from xmovieall;")
+    fun selectAll(): List<Movie>
+}
+
 
 @Component
 interface NovelMapper : BaseMapper<Novel> {
     @Update("TRUNCATE TABLE xnovel;")
     fun truncate()
+
+    @Select("select * from xnovel;")
+    fun selectAll(): List<Novel>
 }
 
 @Component
@@ -126,11 +136,19 @@ interface GroupMapper : BaseMapper<Group>
 interface GroupAttitudeMapper : BaseMapper<GroupAttitude>
 
 @Component
-interface ReportGroupMapper<T> : BaseMapper<T>{
-    @Select("SELECT xgroup.group_id,xuser.user_id,username,xgroup.name AS group_name," +
-            "report_text,report_num " +
-            "FROM (xgattitude JOIN xuser ON xgattitude.user_id = xuser.user_id) " +
-            "JOIN xgroup ON xgroup.group_id = xgattitude.group_id " +
-            "WHERE  report_num > 19 ORDER BY group_id")
-    fun reportSelect() : List<ReportGroup>
+interface ReportGroupMapper<T> : BaseMapper<T> {
+    @Select(
+        "SELECT xgroup.group_id,xuser.user_id,username,xgroup.name AS group_name," +
+                "report_text,report_num " +
+                "FROM (xgattitude JOIN xuser ON xgattitude.user_id = xuser.user_id) " +
+                "JOIN xgroup ON xgroup.group_id = xgattitude.group_id " +
+                "WHERE  report_num > 19 ORDER BY group_id"
+    )
+    fun reportSelect(): List<ReportGroup>
+}
+
+@Component
+interface MapMapper : BaseMapper<MapPosition> {
+    @Update("TRUNCATE TABLE map;")
+    fun truncate()
 }
