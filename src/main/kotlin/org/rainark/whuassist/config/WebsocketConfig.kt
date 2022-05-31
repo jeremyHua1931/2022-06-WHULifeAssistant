@@ -2,6 +2,7 @@ package org.rainark.whuassist.config
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
+import org.rainark.whuassist.controller.ChatStatus
 import org.rainark.whuassist.controller.ExceptionController
 import org.rainark.whuassist.controller.WebsocketController
 import org.rainark.whuassist.entity.User
@@ -42,13 +43,9 @@ class JsonWebsocketHandler : TextWebSocketHandler() {
         try {
             processMessage(session, message)
         } catch (e : Exception) {
-            sessionMap[session.id]!!.sendMessage(
-                TextMessage(
-                    exceptionController.handelUnexpectedException(
-                        (if (e is InvocationTargetException) e.unpackCause() else e) as Exception
-                    )
-                )
-            )
+            sessionMap[session.id]!!.sendMessage(exceptionController.handelUnexpectedException(
+                (if(e is InvocationTargetException) e.unpackCause() else e) as Exception
+            ))
         }
     }
 
@@ -60,8 +57,9 @@ class JsonWebsocketHandler : TextWebSocketHandler() {
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         logger.info("Connection established")
         val ws = sessionMap.remove(session.id)!!
-        if (ws.user != null)
-            sessionMap.remove("${authorizedUserPrefix}${ws.user!!.userId}")
+        if(ws.user == null) return
+        sessionMap.remove("${authorizedUserPrefix}${ws.user!!.userId}")
+        websocketController.afterConnectionClose(ws)
     }
 
     override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
@@ -92,7 +90,7 @@ class JsonWebsocketHandler : TextWebSocketHandler() {
             }
         }
         val result = method.callBy(arguments).toString()
-        sessionMap[session.id]!!.sendMessage(TextMessage(result))
+        sessionMap[session.id]!!.sendMessage(result)
     }
 
     fun userAuthorizedCallback(session : WSSession) {
@@ -106,19 +104,11 @@ class JsonWebsocketHandler : TextWebSocketHandler() {
  * 包含同意聊天的用户信息，Websocket连接关闭时这些信息不会保留。
  * */
 class WSSession(ws : WebSocketSession) {
-    private val session: ConcurrentWebSocketSessionDecorator
-    var user: User? = null
-    private val attributes = ConcurrentHashMap<String, Any>()
-
+    private val session : ConcurrentWebSocketSessionDecorator
+    var user : User? = null
+    val chatRelations = ConcurrentHashMap<Long, ChatStatus>()
     init {
         session = ConcurrentWebSocketSessionDecorator(ws, 30 * 1000, 4096)
     }
-
-    operator fun get(key: String) = attributes[key]
-    operator fun set(key: String, value: Any) {
-        attributes[key] = value
-    }
-
-    fun remove(key: String) = attributes.remove(key)
-    fun sendMessage(message: TextMessage) = session.sendMessage(message)
+    fun sendMessage(message : String) = session.sendMessage(TextMessage(message))
 }
