@@ -19,6 +19,7 @@ enum class ResponseCode(val msg : String) {
     TARGET_NOT_FOUND("操作对象不存在"),
     METHOD_NOT_FOUND("操作方法不存在"),
     USER_OFFLINE("用户离线"),
+    QUEUED_WAIT("已在匹配队列中，请等待"),
     ILLEGAL_PARAMETER("参数错误"),
     PARAMETER_MISSING("缺少参数"),
     BAD_CREDENTIALS("密码错误"),
