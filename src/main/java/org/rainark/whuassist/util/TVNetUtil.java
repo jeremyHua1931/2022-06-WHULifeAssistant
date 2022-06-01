@@ -77,8 +77,9 @@ public class TVNetUtil {
                 res0 = parseDetailPage(tobject.getString("url"));
             }
 
-            if (ranks != null) {
+            if (ranks != null && res0[1].length() != 0) {
                 TV temp = new TV(name, crawlTime, ranks, detailPage, image, res0[0], res0[1], "TV");
+                System.out.println(i + " " + name);
                 result.add(temp);
                 count++;
             }
@@ -114,23 +115,32 @@ public class TVNetUtil {
         String depictSection = html.split("<div class=\"related-info\" style=\"margin-bottom:-10px;\">")[1]
                 .split("<div id=\"dale_movie_subject_banner_after_intro\">")[0]
                 .trim();
-        String processedDepict = depictSection
+
+        String processedDepict0 = depictSection
                 //Sometimes '©豆瓣' will appear in this section, make sure it is deleted.
                 .replace("&copy;豆瓣", "")
                 //Replace Chinese space with English space, since \\s cannot recognize Chinese space.
                 .replace((char) 12288, ' ')
                 .replaceAll("\\s", "")
-                .replaceAll("<.*?>", "")
-                //Remove depict header: xxx简介
-                .split("······", 2)[1]
-                .trim();
-
+                .replaceAll("<.*?>", "");
+        //Remove depict header: xxx简介
+        String processedDepict = "";
+        if (processedDepict0.length() != 0) {
+            processedDepict = processedDepict0.split("······", 2)[1]
+                    .trim();
+        }
         String[] tmp = new String[2];
         tmp[0] = processedInfo;
         tmp[1] = processedDepict;
 
         return tmp;
     }
+
+//    public static void main(String[] args) throws IOException {
+//        System.out.println("yes");
+//        String url1 = "https://movie.douban.com/subject/4933235/";
+//        String[] test=parseDetailPage("https://movie.douban.com/subject/25843287/");
+//    }
 
 
     private static String inputStreamToString(InputStream is) throws IOException {

@@ -66,47 +66,47 @@ class Novel(
     val introduction: String
 ) {
     var myattitude: Int = 0
-    var recommendtotal: Int = 0
-    var unrecommendtotal: Int = 0
-    var intj: Int = 0
-    var intp: Int = 0
-    var entj: Int = 0
-    var entp: Int = 0
+    var recommendtotal: Int = 320
+    var unrecommendtotal: Int = 320
+    var intj: Int = 10
+    var intp: Int = 10
+    var entj: Int = 10
+    var entp: Int = 10
 
-    var infj: Int = 0
-    var infp: Int = 0
-    var enfj: Int = 0
-    var enfp: Int = 0
+    var infj: Int = 10
+    var infp: Int = 10
+    var enfj: Int = 10
+    var enfp: Int = 10
 
-    var istj: Int = 0
-    var isfj: Int = 0
-    var estj: Int = 0
-    var esfj: Int = 0
+    var istj: Int = 10
+    var isfj: Int = 10
+    var estj: Int = 10
+    var esfj: Int = 10
 
-    var istp: Int = 0
-    var isfp: Int = 0
-    var estp: Int = 0
-    var esfp: Int = 0
+    var istp: Int = 10
+    var isfp: Int = 10
+    var estp: Int = 10
+    var esfp: Int = 10
 
-    var unintj: Int = 0
-    var unintp: Int = 0
-    var unentj: Int = 0
-    var unentp: Int = 0
+    var unintj: Int = 10
+    var unintp: Int = 10
+    var unentj: Int = 10
+    var unentp: Int = 10
 
-    var uninfj: Int = 0
-    var uninfp: Int = 0
-    var unenfj: Int = 0
-    var unenfp: Int = 0
+    var uninfj: Int = 10
+    var uninfp: Int = 10
+    var unenfj: Int = 10
+    var unenfp: Int = 10
 
-    var unistj: Int = 0
-    var unisfj: Int = 0
-    var unestj: Int = 0
-    var unesfj: Int = 0
+    var unistj: Int = 10
+    var unisfj: Int = 10
+    var unestj: Int = 10
+    var unesfj: Int = 10
 
-    var unistp: Int = 0
-    var unisfp: Int = 0
-    var unestp: Int = 0
-    var unesfp: Int = 0
+    var unistp: Int = 10
+    var unisfp: Int = 10
+    var unestp: Int = 10
+    var unesfp: Int = 10
 }
 
 @TableName("xnovelall")
@@ -124,47 +124,47 @@ class NovelALL(
     val updatedchapter: String,
     val introduction: String
 ) {
-    var recommendtotal: Int = 0
-    var unrecommendtotal: Int = 0
-    var intj: Int = 0
-    var intp: Int = 0
-    var entj: Int = 0
-    var entp: Int = 0
+    var recommendtotal: Int = 320
+    var unrecommendtotal: Int = 320
+    var intj: Int = 10
+    var intp: Int = 10
+    var entj: Int = 10
+    var entp: Int = 10
 
-    var infj: Int = 0
-    var infp: Int = 0
-    var enfj: Int = 0
-    var enfp: Int = 0
+    var infj: Int = 10
+    var infp: Int = 10
+    var enfj: Int = 10
+    var enfp: Int = 10
 
-    var istj: Int = 0
-    var isfj: Int = 0
-    var estj: Int = 0
-    var esfj: Int = 0
+    var istj: Int = 10
+    var isfj: Int = 10
+    var estj: Int = 10
+    var esfj: Int = 10
 
-    var istp: Int = 0
-    var isfp: Int = 0
-    var estp: Int = 0
-    var esfp: Int = 0
+    var istp: Int = 10
+    var isfp: Int = 10
+    var estp: Int = 10
+    var esfp: Int = 10
 
-    var unintj: Int = 0
-    var unintp: Int = 0
-    var unentj: Int = 0
-    var unentp: Int = 0
+    var unintj: Int = 10
+    var unintp: Int = 10
+    var unentj: Int = 10
+    var unentp: Int = 10
 
-    var uninfj: Int = 0
-    var uninfp: Int = 0
-    var unenfj: Int = 0
-    var unenfp: Int = 0
+    var uninfj: Int = 10
+    var uninfp: Int = 10
+    var unenfj: Int = 10
+    var unenfp: Int = 10
 
-    var unistj: Int = 0
-    var unisfj: Int = 0
-    var unestj: Int = 0
-    var unesfj: Int = 0
+    var unistj: Int = 10
+    var unisfj: Int = 10
+    var unestj: Int = 10
+    var unesfj: Int = 10
 
-    var unistp: Int = 0
-    var unisfp: Int = 0
-    var unestp: Int = 0
-    var unesfp: Int = 0
+    var unistp: Int = 10
+    var unisfp: Int = 10
+    var unestp: Int = 10
+    var unesfp: Int = 10
 }
 
 @TableName("xmovie")
@@ -180,47 +180,47 @@ class Movie(
     val type: String
 ) {
     var myattitude: Int = 0
-    var recommendtotal: Int = 0
-    var unrecommendtotal: Int = 0
-    var intj: Int = 0
-    var intp: Int = 0
-    var entj: Int = 0
-    var entp: Int = 0
+    var recommendtotal: Int = 320
+    var unrecommendtotal: Int = 320
+    var intj: Int = 10
+    var intp: Int = 10
+    var entj: Int = 10
+    var entp: Int = 10
 
-    var infj: Int = 0
-    var infp: Int = 0
-    var enfj: Int = 0
-    var enfp: Int = 0
+    var infj: Int = 10
+    var infp: Int = 10
+    var enfj: Int = 10
+    var enfp: Int = 10
 
-    var istj: Int = 0
-    var isfj: Int = 0
-    var estj: Int = 0
-    var esfj: Int = 0
+    var istj: Int = 10
+    var isfj: Int = 10
+    var estj: Int = 10
+    var esfj: Int = 10
 
-    var istp: Int = 0
-    var isfp: Int = 0
-    var estp: Int = 0
-    var esfp: Int = 0
+    var istp: Int = 10
+    var isfp: Int = 10
+    var estp: Int = 10
+    var esfp: Int = 10
 
-    var unintj: Int = 0
-    var unintp: Int = 0
-    var unentj: Int = 0
-    var unentp: Int = 0
+    var unintj: Int = 10
+    var unintp: Int = 10
+    var unentj: Int = 10
+    var unentp: Int = 10
 
-    var uninfj: Int = 0
-    var uninfp: Int = 0
-    var unenfj: Int = 0
-    var unenfp: Int = 0
+    var uninfj: Int = 10
+    var uninfp: Int = 10
+    var unenfj: Int = 10
+    var unenfp: Int = 10
 
-    var unistj: Int = 0
-    var unisfj: Int = 0
-    var unestj: Int = 0
-    var unesfj: Int = 0
+    var unistj: Int = 10
+    var unisfj: Int = 10
+    var unestj: Int = 10
+    var unesfj: Int = 10
 
-    var unistp: Int = 0
-    var unisfp: Int = 0
-    var unestp: Int = 0
-    var unesfp: Int = 0
+    var unistp: Int = 10
+    var unisfp: Int = 10
+    var unestp: Int = 10
+    var unesfp: Int = 10
 }
 
 @TableName("xmovieall")
@@ -237,47 +237,47 @@ class MovieAll(
     val type: String
 
 ) {
-    var recommendtotal: Int = 0
-    var unrecommendtotal: Int = 0
-    var intj: Int = 0
-    var intp: Int = 0
-    var entj: Int = 0
-    var entp: Int = 0
+    var recommendtotal: Int = 320
+    var unrecommendtotal: Int = 320
+    var intj: Int = 10
+    var intp: Int = 10
+    var entj: Int = 10
+    var entp: Int = 10
 
-    var infj: Int = 0
-    var infp: Int = 0
-    var enfj: Int = 0
-    var enfp: Int = 0
+    var infj: Int = 10
+    var infp: Int = 10
+    var enfj: Int = 10
+    var enfp: Int = 10
 
-    var istj: Int = 0
-    var isfj: Int = 0
-    var estj: Int = 0
-    var esfj: Int = 0
+    var istj: Int = 10
+    var isfj: Int = 10
+    var estj: Int = 10
+    var esfj: Int = 10
 
-    var istp: Int = 0
-    var isfp: Int = 0
-    var estp: Int = 0
-    var esfp: Int = 0
+    var istp: Int = 10
+    var isfp: Int = 10
+    var estp: Int = 10
+    var esfp: Int = 10
 
-    var unintj: Int = 0
-    var unintp: Int = 0
-    var unentj: Int = 0
-    var unentp: Int = 0
+    var unintj: Int = 10
+    var unintp: Int = 10
+    var unentj: Int = 10
+    var unentp: Int = 10
 
-    var uninfj: Int = 0
-    var uninfp: Int = 0
-    var unenfj: Int = 0
-    var unenfp: Int = 0
+    var uninfj: Int = 10
+    var uninfp: Int = 10
+    var unenfj: Int = 10
+    var unenfp: Int = 10
 
-    var unistj: Int = 0
-    var unisfj: Int = 0
-    var unestj: Int = 0
-    var unesfj: Int = 0
+    var unistj: Int = 10
+    var unisfj: Int = 10
+    var unestj: Int = 10
+    var unesfj: Int = 10
 
-    var unistp: Int = 0
-    var unisfp: Int = 0
-    var unestp: Int = 0
-    var unesfp: Int = 0
+    var unistp: Int = 10
+    var unisfp: Int = 10
+    var unestp: Int = 10
+    var unesfp: Int = 10
 }
 
 @TableName("xtv")
@@ -293,47 +293,47 @@ class TV(
     var type: String
 ) {
     var myattitude: Int = 0
-    var recommendtotal: Int = 0
-    var unrecommendtotal: Int = 0
-    var intj: Int = 0
-    var intp: Int = 0
-    var entj: Int = 0
-    var entp: Int = 0
+    var recommendtotal: Int = 320
+    var unrecommendtotal: Int = 320
+    var intj: Int = 10
+    var intp: Int = 10
+    var entj: Int = 10
+    var entp: Int = 10
 
-    var infj: Int = 0
-    var infp: Int = 0
-    var enfj: Int = 0
-    var enfp: Int = 0
+    var infj: Int = 10
+    var infp: Int = 10
+    var enfj: Int = 10
+    var enfp: Int = 10
 
-    var istj: Int = 0
-    var isfj: Int = 0
-    var estj: Int = 0
-    var esfj: Int = 0
+    var istj: Int = 10
+    var isfj: Int = 10
+    var estj: Int = 10
+    var esfj: Int = 10
 
-    var istp: Int = 0
-    var isfp: Int = 0
-    var estp: Int = 0
-    var esfp: Int = 0
+    var istp: Int = 10
+    var isfp: Int = 10
+    var estp: Int = 10
+    var esfp: Int = 10
 
-    var unintj: Int = 0
-    var unintp: Int = 0
-    var unentj: Int = 0
-    var unentp: Int = 0
+    var unintj: Int = 10
+    var unintp: Int = 10
+    var unentj: Int = 10
+    var unentp: Int = 10
 
-    var uninfj: Int = 0
-    var uninfp: Int = 0
-    var unenfj: Int = 0
-    var unenfp: Int = 0
+    var uninfj: Int = 10
+    var uninfp: Int = 10
+    var unenfj: Int = 10
+    var unenfp: Int = 10
 
-    var unistj: Int = 0
-    var unisfj: Int = 0
-    var unestj: Int = 0
-    var unesfj: Int = 0
+    var unistj: Int = 10
+    var unisfj: Int = 10
+    var unestj: Int = 10
+    var unesfj: Int = 10
 
-    var unistp: Int = 0
-    var unisfp: Int = 0
-    var unestp: Int = 0
-    var unesfp: Int = 0
+    var unistp: Int = 10
+    var unisfp: Int = 10
+    var unestp: Int = 10
+    var unesfp: Int = 10
 }
 
 @TableName("xtvall")
@@ -349,47 +349,47 @@ class TVAll(
     var type: String
 
 ) {
-    var recommendtotal: Int = 0
-    var unrecommendtotal: Int = 0
-    var intj: Int = 0
-    var intp: Int = 0
-    var entj: Int = 0
-    var entp: Int = 0
+    var recommendtotal: Int = 320
+    var unrecommendtotal: Int = 320
+    var intj: Int = 10
+    var intp: Int = 10
+    var entj: Int = 10
+    var entp: Int = 10
 
-    var infj: Int = 0
-    var infp: Int = 0
-    var enfj: Int = 0
-    var enfp: Int = 0
+    var infj: Int = 10
+    var infp: Int = 10
+    var enfj: Int = 10
+    var enfp: Int = 10
 
-    var istj: Int = 0
-    var isfj: Int = 0
-    var estj: Int = 0
-    var esfj: Int = 0
+    var istj: Int = 10
+    var isfj: Int = 10
+    var estj: Int = 10
+    var esfj: Int = 10
 
-    var istp: Int = 0
-    var isfp: Int = 0
-    var estp: Int = 0
-    var esfp: Int = 0
+    var istp: Int = 10
+    var isfp: Int = 10
+    var estp: Int = 10
+    var esfp: Int = 10
 
-    var unintj: Int = 0
-    var unintp: Int = 0
-    var unentj: Int = 0
-    var unentp: Int = 0
+    var unintj: Int = 10
+    var unintp: Int = 10
+    var unentj: Int = 10
+    var unentp: Int = 10
 
-    var uninfj: Int = 0
-    var uninfp: Int = 0
-    var unenfj: Int = 0
-    var unenfp: Int = 0
+    var uninfj: Int = 10
+    var uninfp: Int = 10
+    var unenfj: Int = 10
+    var unenfp: Int = 10
 
-    var unistj: Int = 0
-    var unisfj: Int = 0
-    var unestj: Int = 0
-    var unesfj: Int = 0
+    var unistj: Int = 10
+    var unisfj: Int = 10
+    var unestj: Int = 10
+    var unesfj: Int = 10
 
-    var unistp: Int = 0
-    var unisfp: Int = 0
-    var unestp: Int = 0
-    var unesfp: Int = 0
+    var unistp: Int = 10
+    var unisfp: Int = 10
+    var unestp: Int = 10
+    var unesfp: Int = 10
 }
 
 @TableName("xgroup")
