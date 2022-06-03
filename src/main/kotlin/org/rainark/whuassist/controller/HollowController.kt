@@ -53,7 +53,7 @@ class HollowController {
                 .eq("belong_to",belong_to)
                 .eq("time",time))!= null)
             throw RequestException(ResponseCode.UNEXPECTED_EXCEPTION,"请不要重复添加")
-        val hollow = Hollow(0,time,content,under_post_id,reply_post_id,belong_to)
+        val hollow = Hollow(0,time,content,under_post_id,reply_post_id,belong_to,0,0,0)
         hollowMapper.insert(hollow)
         val hollowThis = hollowMapper.selectOne(QueryWrapper<Hollow>()
             .eq("belong_to",belong_to)

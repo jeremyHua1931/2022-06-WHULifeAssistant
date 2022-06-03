@@ -39,7 +39,7 @@ class UserController {
         if(phone == "")
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请输入手机号")
         //todo 判断学校是否在学校表中
-        val user = User(0,wechatId,username, phone, school)
+        val user = User(0,wechatId,username, phone, school,"",0,"",0)
         userMapper.insert(user)
         return simpleSuccessResponse()
     }

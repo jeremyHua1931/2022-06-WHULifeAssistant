@@ -12,12 +12,13 @@ class User(
     var wechatId : String,
     var username : String,
     var phone : String,
-    var school : Int
+    var school : Int,
+    var hollow_name: String,
+    var mbti: Short,
+    var image: String,
+    var competence : Int,
 ){
-    var hollow_name: String = ""
-    var mbti: Short = 0
-    var image: String = ""
-    var competence : Int = 0
+
 }
 
 @TableName("xhollow")
@@ -27,11 +28,12 @@ class Hollow(
     var content : String,
     var under_post_id : Long,
     var reply_post_id : Long,
-    var belong_to : Long
+    var belong_to : Long,
+    var support_num : Int,
+    var comfort_num : Int,
+    var against_num : Int
 ){
-    var support_num : Int = 0
-    var comfort_num : Int = 0
-    var against_num : Int = 0
+
 }
 @TableName("xhattitude")
 class HollowAttitude(
