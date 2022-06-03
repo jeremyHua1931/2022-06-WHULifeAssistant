@@ -56,6 +56,9 @@ class RecommendController {
     @Autowired
     lateinit var movieAllMapper: MovieAllMapper
 
+    @Autowired
+    lateinit var tvAllMapper: TVAllMapper
+
     @PostMapping("/recom/refresh")
     fun crawlRefresh(@JsonParam msg: String): String {
         updateCrawlResult.updateCrawlToMySQL()
@@ -128,7 +131,23 @@ class RecommendController {
         @JsonParam wechatId: String
     ): String {
         val tvList = tvMapper.selectList(QueryWrapper<TV>().orderByDesc("ranks"));
+        var tvAllList = tvAllMapper.selectList(QueryWrapper<TVAll>().last("ORDER BY RAND() LIMIT 10"));
         val UserAttitude = tvAttitudeMapper.selectList(QueryWrapper<TVAttitude>().eq("wechatid", wechatId))
+        tvAllList.sortWith(Comparator { tv, t1 ->
+            +
+            if (tv.ranks >= t1.ranks) -1 else {
+                1
+            }
+        })
+
+        for (x in tvAllList) {
+            tvList.add(tvTrans(x))
+            try {
+                tvMapper.insert(tvTrans(x))
+            } catch (e: org.springframework.dao.DuplicateKeyException) {
+                println("tv table already has this novel : ${x.name}")
+            }
+        }
         for (x in tvList) {
             for (y in UserAttitude) {
                 if (y.name == x.name && y.ranks == x.ranks) {
@@ -513,6 +532,45 @@ class RecommendController {
 
     fun movieTrans(x: MovieAll): Movie {
         var tmp = Movie(x.name, "old", x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
+        tmp.recommendtotal = x.recommendtotal
+        tmp.unrecommendtotal = x.unrecommendtotal
+        tmp.intj = x.intj
+        tmp.intp = x.intp
+        tmp.entj = x.entj
+        tmp.entp = x.entp
+        tmp.infj = x.infj
+        tmp.infp = x.infp
+        tmp.enfj = x.enfj
+        tmp.enfp = x.enfp
+        tmp.istj = x.istj
+        tmp.isfj = x.isfj
+        tmp.estj = x.estj
+        tmp.esfj = x.esfj
+        tmp.istp = x.istp
+        tmp.isfp = x.isfp
+        tmp.estp = x.estp
+        tmp.esfp = x.esfp
+        tmp.unintj = x.unintj
+        tmp.unintp = x.unintp
+        tmp.unentj = x.unentj
+        tmp.unentp = x.unentp
+        tmp.uninfj = x.uninfj
+        tmp.uninfp = x.uninfp
+        tmp.unenfj = x.unenfj
+        tmp.unenfp = x.unenfp
+        tmp.unistj = x.unistj
+        tmp.unisfj = x.unisfj
+        tmp.unestj = x.unestj
+        tmp.unesfj = x.unesfj
+        tmp.unistp = x.unistp
+        tmp.unisfp = x.unisfp
+        tmp.unestp = x.unestp
+        tmp.unesfp = x.unesfp
+        return tmp
+    }
+
+    fun tvTrans(x: TVAll): TV {
+        var tmp = TV(x.name, "old", x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
         tmp.recommendtotal = x.recommendtotal
         tmp.unrecommendtotal = x.unrecommendtotal
         tmp.intj = x.intj

@@ -8,6 +8,7 @@ import org.rainark.whuassist.entity.ReturnHollow
 import org.rainark.whuassist.entity.User
 import org.rainark.whuassist.exception.*
 import org.rainark.whuassist.mapper.*
+import org.rainark.whuassist.util.JwtTokenUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
@@ -24,6 +25,8 @@ class UserController {
     lateinit var replyHollowMsgMapper: ReplyHollowMsgMapper<ReturnHollow>
     @Autowired
     lateinit var groupMapper: GroupMapper
+    @Autowired
+    lateinit var jwtTokenUtil : JwtTokenUtil
 
     @PostMapping("/user/register")
     fun register(@JsonParam wechatId : String,
@@ -47,7 +50,7 @@ class UserController {
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"不能使用的微信Id登录")
         val user = userMapper.selectOne(QueryWrapper<User>().eq("wechat_id",wechatId))
             ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请使用有效的微信Id登录")
-        return simpleSuccessResponse("user" to user)
+        return simpleSuccessResponse("user" to user, "token" to jwtTokenUtil.createJWT(user.userId, user.username))
     }
 
     @PostMapping("/user/replyHollowList")

@@ -16,14 +16,14 @@ drop table if exists map;
 create table xuser
 (
     user_id     BIGINT NOT NULL AUTO_INCREMENT,
-    wechat_id   varchar(20),
+    wechat_id   varchar(40),
     username    varchar(20),
     phone       varchar(11),
     school      INT,
     hollow_name varchar(20),
     mbti        MEDIUMINT,
     image       varchar(100),
-    competence INT,
+    competence  INT,
     PRIMARY KEY (user_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -72,6 +72,20 @@ create table map
     wechatid   TEXT,
     kind       TEXT,
     PRIMARY KEY (primarykey)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+drop table if exists notice;
+create table notice
+(
+    type      varchar(500),
+    date      TINYTEXT,
+    title     TINYTEXT,
+    content   TEXT,
+    wechatid  TEXT,
+    publisher TINYTEXT,
+    kind      TINYTEXT,
+    PRIMARY KEY (type)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 

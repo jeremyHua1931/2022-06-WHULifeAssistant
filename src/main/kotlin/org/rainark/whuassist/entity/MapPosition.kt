@@ -2,6 +2,7 @@ package org.rainark.whuassist.entity
 
 import com.baomidou.mybatisplus.annotation.TableId
 import com.baomidou.mybatisplus.annotation.TableName
+import org.springframework.http.server.reactive.AbstractListenerReadPublisher
 import java.util.Date
 
 @TableName("map")
@@ -16,6 +17,16 @@ class MapPosition(
     var kind: String,
     var dates: String
 ) {
-
-
 }
+
+@TableName("notice")
+class Notice(
+    @TableId
+    var type: String,
+    var date: String,
+    var title: String,
+    var content: String,
+    var publisher: String,
+    var wechatid: String,
+    var kind: String
+) {}
