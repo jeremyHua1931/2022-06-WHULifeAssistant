@@ -53,6 +53,16 @@ class UserController {
         return simpleSuccessResponse("user" to user, "token" to jwtTokenUtil.createJWT(user.userId, user.username))
     }
 
+    @PostMapping("/user/putimage")
+    fun putImage(@JsonParam userId: Long,
+                 @JsonParam image : String) : String{
+        val user = userMapper.selectOne(QueryWrapper<User>().eq("user_id",userId))
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"所请求用户不存在")
+        user.image = image
+        userMapper.update(user,QueryWrapper<User>().eq("user_id",userId))
+        return simpleSuccessResponse()
+    }
+
     @PostMapping("/user/replyHollowList")
     fun getReplyHollowList(@JsonParam time : Date,
                            @JsonParam userId : Long) : String{
