@@ -28,6 +28,10 @@ class HollowController {
     lateinit var againstHollowMapper: AgainstHollowMapper<AgainstHollow>
     @Autowired
     lateinit var replyHollowMapper : ReplyHollowMapper
+    @Autowired
+    lateinit var againstAttitudeMapper : AgainstAttitudeMapper
+    @Autowired
+    lateinit var againstTextMapper : AgainstTextMapper<ReportHollow>
 
 
     @PostMapping("/hollow/createHollow")
@@ -199,39 +203,42 @@ class HollowController {
     }
 
     @PostMapping("/hollow/against")
-    fun hollowAgainst(@JsonParam userId: Long,
-                      @JsonParam hollowId: Long):String{
+    fun reportGroup(@JsonParam userId : Long,
+                    @JsonParam hollowId : Long,
+                    @JsonParam reportText : String) : String{
         val hollow = hollowMapper.selectOne(QueryWrapper<Hollow>().eq("hollow_id",hollowId))
-            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"安慰的帖子不存在")
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"举报的群不存在")
         if(userMapper.selectOne(QueryWrapper<User>().eq("user_id",userId)) == null)
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请求用户异常")
-        val hollowAttitude = hollowAttitudeMapper.selectOne(QueryWrapper<HollowAttitude>()
+        val hollowAgainstAttitude = againstAttitudeMapper.selectOne(QueryWrapper<HollowAgainst>()
             .eq("user_id",userId)
             .eq("hollow_id",hollowId))
-            ?: HollowAttitude(userId,hollowId,0,0,0)
-        if(hollowAttitude.against_attitude.toInt() == 1){
+            ?:HollowAgainst(userId,hollowId,0,reportText);
+        if(hollowAgainstAttitude.against_attitude.toInt() == 1){
             return simpleMsgResponse(0,"已经举报啦")
         }else{
             hollow.against_num++
             hollowMapper.update(hollow,UpdateWrapper<Hollow>().eq("hollow_id",hollowId))
-            hollowAttitude.against_attitude = 1
-            if(hollowAttitudeMapper.exists(QueryWrapper<HollowAttitude>()
+            hollowAgainstAttitude.against_attitude = 1
+            hollowAgainstAttitude.reportText = reportText
+            if(againstAttitudeMapper.exists(QueryWrapper<HollowAgainst>()
                     .eq("user_id",userId)
                     .eq("hollow_id",hollowId))){
-                hollowAttitudeMapper.update(hollowAttitude,UpdateWrapper<HollowAttitude>()
+                againstAttitudeMapper.update(hollowAgainstAttitude,UpdateWrapper<HollowAgainst>()
                     .eq("user_id",userId)
                     .eq("hollow_id",hollowId))
             }else{
-                hollowAttitudeMapper.insert(hollowAttitude)
+                againstAttitudeMapper.insert(hollowAgainstAttitude)
             }
-            return simpleMsgResponse(0,"成功举报")
         }
+        return simpleMsgResponse(0,"成功举报")
+
     }
 
     @PostMapping("/hollow/againstHollowList")
     fun getAgainstList() : String{
-        val hollowList = againstHollowMapper.againstSelect()
-        return cascadeSuccessResponse(hollowList)
+        val reportList = againstTextMapper.reportSelect()
+        return cascadeSuccessResponse(reportList)
     }
 
     @PostMapping("/hollow/myHollowList")

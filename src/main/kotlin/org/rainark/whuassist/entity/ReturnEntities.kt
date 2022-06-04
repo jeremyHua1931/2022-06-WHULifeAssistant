@@ -66,3 +66,12 @@ class ReportGroup(
     var reportText : String,
     var reportNum : Int
 )
+
+class ReportHollow(
+    var hollowId: Long ,
+    var userId : Long,
+    var username: String,
+    var hollowName: String,
+    var reportText : String,
+    var against_num : Int
+)

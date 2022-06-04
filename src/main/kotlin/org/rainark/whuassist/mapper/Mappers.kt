@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
 import org.apache.ibatis.annotations.Select
 import org.apache.ibatis.annotations.Update
+import org.jsoup.Connection.Base
 import org.rainark.whuassist.entity.*
 import org.springframework.stereotype.Component
 import java.util.*
@@ -155,6 +156,21 @@ interface ReportGroupMapper<T> : BaseMapper<T> {
                 "WHERE  report_num > 19 ORDER BY group_id"
     )
     fun reportSelect(): List<ReportGroup>
+}
+
+@Component
+interface AgainstAttitudeMapper : BaseMapper<HollowAgainst>
+
+@Component
+interface AgainstTextMapper<T> : BaseMapper<T> {
+    @Select(
+        "SELECT xhollow.hollow_id,xuser.user_id,username,xhollow.name AS hollow_name," +
+                "report_text,against_num " +
+                "FROM (xagainst JOIN xuser ON xagainst.user_id = xuser.user_id) " +
+                "JOIN xhollow ON xhollow.hollow_id = xagainst.group_id " +
+                "WHERE  report_num > 19 ORDER BY group_id"
+    )
+    fun reportSelect(): List<ReportHollow>
 }
 
 @Component

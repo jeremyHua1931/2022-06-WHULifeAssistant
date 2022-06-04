@@ -52,6 +52,14 @@ create table xhattitude
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+create table xagainst
+(
+    user_id BIGINT,
+    hollow_id BIGINT,
+    against_attitude MEDIUMINT,
+    report_text TINYTEXT
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 create table xreplyhollow
 (
     user_id   BIGINT,

@@ -434,3 +434,11 @@ class GroupAttitude(
     var report_attitude : Short,
     var reportText : String
 )
+
+@TableName("xagainst")
+class HollowAgainst(
+    var userId: Long,
+    var hollowId : Long,
+    var against_attitude: Short,
+    var reportText : String
+)

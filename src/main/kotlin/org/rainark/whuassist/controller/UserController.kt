@@ -58,6 +58,8 @@ class UserController {
                  @JsonParam image : String) : String{
         val user = userMapper.selectOne(QueryWrapper<User>().eq("user_id",userId))
             ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"所请求用户不存在")
+        if(image.length > 100)
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"输入图片长度过长")
         user.image = image
         userMapper.update(user,QueryWrapper<User>().eq("user_id",userId))
         return simpleSuccessResponse()
