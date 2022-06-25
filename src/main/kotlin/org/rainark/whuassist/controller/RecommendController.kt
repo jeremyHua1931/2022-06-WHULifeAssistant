@@ -130,7 +130,7 @@ class RecommendController {
         @JsonParam msg: String,
         @JsonParam wechatId: String
     ): String {
-        val tvList = tvMapper.selectList(QueryWrapper<TV>().orderByDesc("ranks"));
+        val tvList = tvMapper.selectList(QueryWrapper<TV>().orderByDesc("ranks").eq("crawltime","new"));
         var tvAllList = tvAllMapper.selectList(QueryWrapper<TVAll>().last("ORDER BY RAND() LIMIT 10"));
         val UserAttitude = tvAttitudeMapper.selectList(QueryWrapper<TVAttitude>().eq("wechatid", wechatId))
         tvAllList.sortWith(Comparator { tv, t1 ->
@@ -154,6 +154,9 @@ class RecommendController {
                     x.myattitude = y.attitude
                 }
             }
+        }
+        for(x in tvList){
+            println(x.crawltime+" "+x.name)
         }
         return cascadeSuccessResponse(tvList)
     }

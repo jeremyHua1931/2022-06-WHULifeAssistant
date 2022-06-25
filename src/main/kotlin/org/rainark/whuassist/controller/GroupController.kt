@@ -55,7 +55,7 @@ class GroupController {
                 .eq("number",number)).isNotEmpty())
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"该群已存在请勿重复添加")
 
-        val groupNew = Group(0,postId,name,number,introduction,0)
+        val groupNew = Group(0,postId,name,number,introduction,0,"")
         groupNew.checkValid()
         groupMapper.insert(groupNew)
 

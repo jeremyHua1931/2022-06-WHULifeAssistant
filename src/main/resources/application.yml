@@ -26,5 +26,5 @@ server:
 #配置路径
 
 file:
-  uploadQcFolder: C://user//jeremyhua//wechatWHU
-  uploadUserFolder: C://user//jeremyhua//wechatWHU
+  uploadQcFolder: C://Users//JeremyHua//wechatWHU//
+  uploadUserFolder: C://Users//JeremyHua//wechatWHU//

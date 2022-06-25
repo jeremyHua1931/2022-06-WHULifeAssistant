@@ -16,7 +16,7 @@ class User(
     var hollow_name: String,
     var mbti: Short,
     var image: String,
-    var competence : Int,
+    var competence : Int
 ){
 
 }
@@ -401,10 +401,10 @@ class Group(
     var name: String,
     var number : String,
     var introduction: String,
-    var reportNum : Int
-
-){
+    var reportNum : Int,
     var qrCode : String = ""
+){
+
     public fun checkValid(){
         if(name == ""){
             throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请输入非空的群名")
