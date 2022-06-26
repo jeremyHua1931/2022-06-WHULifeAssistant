@@ -112,7 +112,7 @@ class RecommendController {
             try {
                 movieMapper.insert(movieTrans(x))
             } catch (e: org.springframework.dao.DuplicateKeyException) {
-                println("movie table already has this novel : ${x.name}")
+//                println("movie table already has this novel : ${x.name}")
             }
         }
         for (x in movieList) {
@@ -130,7 +130,7 @@ class RecommendController {
         @JsonParam msg: String,
         @JsonParam wechatId: String
     ): String {
-        val tvList = tvMapper.selectList(QueryWrapper<TV>().orderByDesc("ranks").eq("crawltime","new"));
+        val tvList = tvMapper.selectList(QueryWrapper<TV>().orderByDesc("ranks").eq("crawltime", "new"));
         var tvAllList = tvAllMapper.selectList(QueryWrapper<TVAll>().last("ORDER BY RAND() LIMIT 10"));
         val UserAttitude = tvAttitudeMapper.selectList(QueryWrapper<TVAttitude>().eq("wechatid", wechatId))
         tvAllList.sortWith(Comparator { tv, t1 ->
@@ -145,7 +145,7 @@ class RecommendController {
             try {
                 tvMapper.insert(tvTrans(x))
             } catch (e: org.springframework.dao.DuplicateKeyException) {
-                println("tv table already has this novel : ${x.name}")
+//                println("tv table already has this novel : ${x.name}")
             }
         }
         for (x in tvList) {
@@ -155,22 +155,25 @@ class RecommendController {
                 }
             }
         }
-        for(x in tvList){
-            println(x.crawltime+" "+x.name)
-        }
+//        for(x in tvList){
+//            println(x.crawltime+" "+x.name)
+//        }
         return cascadeSuccessResponse(tvList)
     }
 
     @PostMapping("/recom/attitude/novel")
     fun NovelEdit(
         @JsonParam wechatid: String,
-        @JsonParam personality: String,
         @JsonParam name: String,
         @JsonParam author: String,
         @JsonParam attitude: Int
     ): String {
-        // var user=userMapper.selectList(QueryWrapper<User>().eq("wechat_id",wechatId))
-        // var person=editNovelAttitude(x,user[0].personality)
+        var user = userMapper.selectList(QueryWrapper<User>().eq("wechat_id", wechatid))
+        var personality = "0"
+        if (user.size == 1) {
+            personality = getPersonality(user[0].mbti)
+        }
+
         if (attitude != 0 && attitude != 1 && attitude != -1) {
             return "Attitude sign is wrong"
         }
@@ -240,13 +243,15 @@ class RecommendController {
     @PostMapping("/recom/attitude/movie")
     fun movieEdit(
         @JsonParam wechatid: String,
-        @JsonParam personality: String,
         @JsonParam name: String,
         @JsonParam ranks: Double,
         @JsonParam attitude: Int
     ): String {
-        // var user=userMapper.selectList(QueryWrapper<User>().eq("wechat_id",wechatId))
-        // var person=editNovelAttitude(x,user[0].personality)
+        var user = userMapper.selectList(QueryWrapper<User>().eq("wechat_id", wechatid))
+        var personality = "0"
+        if (user.size == 1) {
+            personality = getPersonality(user[0].mbti)
+        }
 
         if (attitude != 0 && attitude != 1 && attitude != -1) {
             return "Attitude sign is wrong"
@@ -320,13 +325,16 @@ class RecommendController {
     @PostMapping("/recom/attitude/tv")
     fun tvEdit(
         @JsonParam wechatid: String,
-        @JsonParam personality: String,
         @JsonParam name: String,
         @JsonParam ranks: Double,
         @JsonParam attitude: Int
     ): String {
-        // var user=userMapper.selectList(QueryWrapper<User>().eq("wechat_id",wechatId))
-        // var person=editNovelAttitude(x,user[0].personality)
+        var user = userMapper.selectList(QueryWrapper<User>().eq("wechat_id", wechatid))
+        var personality = "0"
+        if (user.size == 1) {
+            personality = getPersonality(user[0].mbti)
+        }
+
         if (attitude != 0 && attitude != 1 && attitude != -1) {
             return "Attitude sign is wrong"
         }
@@ -453,6 +461,7 @@ class RecommendController {
             "unisfp" -> novel.unisfp += attitude
             "unestp" -> novel.unestp += attitude
             "unesfp" -> novel.unesfp += attitude
+            else -> println("人格类型未知")
         }
         return novel
     }
@@ -491,6 +500,7 @@ class RecommendController {
             "unisfp" -> movie.unisfp += attitude
             "unestp" -> movie.unestp += attitude
             "unesfp" -> movie.unesfp += attitude
+            else -> println("人格类型未知")
         }
         return movie
     }
@@ -529,6 +539,7 @@ class RecommendController {
             "unisfp" -> tv.unisfp += attitude
             "unestp" -> tv.unestp += attitude
             "unesfp" -> tv.unesfp += attitude
+            else -> println("人格类型未知")
         }
         return tv
     }
@@ -611,5 +622,15 @@ class RecommendController {
         return tmp
     }
 
+    fun getPersonality(index: Short): String {
+        var data = arrayOf(
+            "null",
+            "intj", "intp", "entj", "entp",
+            "infj", "enfp", "enfj", "enfp",
+            "istj", "isfj", "estj", "esfj",
+            "istp", "isfp", "estp", "esfp"
+        )
+        return data[index.toInt()]
+    }
 }
 

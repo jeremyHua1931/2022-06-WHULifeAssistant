@@ -283,7 +283,8 @@ class HollowController {
             .eq("user_id",hollow.belong_to)
             .eq("hollow_id",hollowId))
             ?: HollowAttitude(userId,hollow.belong_to,0,0,0)
-        val returnHollow = ReturnHollow(hollow.hollowId,
+        val returnHollow = ReturnHollow(
+            hollow.hollowId,
             hollow.time,
             hollow.content,
             hollow.under_post_id,
@@ -291,11 +292,12 @@ class HollowController {
             hollow.belong_to,
             hollow.support_num,
             hollow.comfort_num,
-            belongUser.username,
+            belongUser.hollow_name,
             belongUser.image,
             attitude.support_attitude,
             attitude.comfort_attitude,
-            attitude.against_attitude)
+            attitude.against_attitude
+        )
         return simpleSuccessResponse("result" to returnHollow)
     }
 

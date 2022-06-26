@@ -1,6 +1,7 @@
 package org.rainark.whuassist.util
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import org.rainark.whuassist.entity.Movie
 import org.rainark.whuassist.entity.MovieAll
 import org.rainark.whuassist.entity.TV
 import org.rainark.whuassist.entity.TVAll
@@ -36,8 +37,9 @@ class UpdateTV {
             println("${LocalDateTime.now()}  Start to init TVALL Table....." + "       " + LocalDateTime.now())
             for (x in resultTV) {
                 if (x.ranks >= 7.5) {
-                    var TVALL =
+                    var TVALL1 =
                         TVAll(x.name, x.crawltime, x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
+                    var TVALL = addTVALLInfo(TVALL1)
                     try {
                         tvAllMapper.insert(TVALL)
                     } catch (e: org.springframework.dao.DuplicateKeyException) {
@@ -109,8 +111,10 @@ class UpdateTV {
             if (x.ranks >= 7.5) {
                 var resultTVAllTmp = tvAllMapper.selectList(QueryWrapper<TVAll>().eq("name", x.name))
                 if (resultTVAllTmp.size == 0) {
-                    var resultTVAllTMP =
+                    var resultTVAllTMP1 =
                         TVAll(x.name, "old", x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
+
+                    var resultTVAllTMP = addTVALLInfo(resultTVAllTMP1)
                     try {
                         tvAllMapper.insert(resultTVAllTMP)
                     } catch (e: org.springframework.dao.DuplicateKeyException) {
@@ -160,7 +164,8 @@ class UpdateTV {
                 }
             }
             try {
-                tvMapper.insert(x)
+                var TVNew = addTVInfo(x)
+                tvMapper.insert(TVNew)
             } catch (e: org.springframework.dao.DuplicateKeyException) {
                 println("Duplicate key: update tv table")
             }
@@ -168,5 +173,84 @@ class UpdateTV {
         }
         println("${LocalDateTime.now()} : TV list has beend completed !")
 
+    }
+
+
+    fun addTVInfo(x: TV): TV {
+        var y: Int = x.ranks.toInt()
+        x.recommendtotal = 16 * y
+        x.unrecommendtotal = 16 * (10 - y)
+        x.intj = y
+        x.intp = y
+        x.entj = y
+        x.entp = y
+        x.infj = y
+        x.infp = y
+        x.enfj = y
+        x.enfp = y
+        x.istj = y
+        x.isfj = y
+        x.estj = y
+        x.esfj = y
+        x.istp = y
+        x.isfp = y
+        x.estp = y
+        x.esfp = y
+        x.unintj = 10 - y
+        x.unintp = 10 - y
+        x.unentj = 10 - y
+        x.unentp = 10 - y
+        x.uninfj = 10 - y
+        x.uninfp = 10 - y
+        x.unenfj = 10 - y
+        x.unenfp = 10 - y
+        x.unistj = 10 - y
+        x.unisfj = 10 - y
+        x.unestj = 10 - y
+        x.unesfj = 10 - y
+        x.unistp = 10 - y
+        x.unisfp = 10 - y
+        x.unestp = 10 - y
+        x.unesfp = 10 - y
+        return x
+    }
+
+    fun addTVALLInfo(x: TVAll): TVAll {
+        var y: Int = x.ranks.toInt()
+        x.recommendtotal = 16 * y
+        x.unrecommendtotal = 16 * (10 - y)
+        x.intj = y
+        x.intp = y
+        x.entj = y
+        x.entp = y
+        x.infj = y
+        x.infp = y
+        x.enfj = y
+        x.enfp = y
+        x.istj = y
+        x.isfj = y
+        x.estj = y
+        x.esfj = y
+        x.istp = y
+        x.isfp = y
+        x.estp = y
+        x.esfp = y
+        x.unintj = 10 - y
+        x.unintp = 10 - y
+        x.unentj = 10 - y
+        x.unentp = 10 - y
+        x.uninfj = 10 - y
+        x.uninfp = 10 - y
+        x.unenfj = 10 - y
+        x.unenfp = 10 - y
+        x.unistj = 10 - y
+        x.unisfj = 10 - y
+        x.unestj = 10 - y
+        x.unesfj = 10 - y
+        x.unistp = 10 - y
+        x.unisfp = 10 - y
+        x.unestp = 10 - y
+        x.unesfp = 10 - y
+        return x
     }
 }

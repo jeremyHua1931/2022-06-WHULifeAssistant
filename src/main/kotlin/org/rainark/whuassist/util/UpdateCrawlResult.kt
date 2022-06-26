@@ -56,7 +56,7 @@ class UpdateCrawlResult {
     //    cron="0 */5 * * * ?"         测试其他功能时,每五分钟执行一次
     //    cron="0 0 4 * * ?"           正常部署时,每天凌晨四点执行一次
     @PostConstruct
-    @Scheduled(cron = "0 */120 * * * ?")
+    @Scheduled(cron = "0 0 4 * * ?")
     fun updateCrawlToMySQL() {
 
         if (recordCount == 0) {

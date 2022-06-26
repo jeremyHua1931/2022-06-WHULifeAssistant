@@ -25,16 +25,17 @@ interface ReplyHollowMapper : BaseMapper<ReplyHollowMsg>
 @Component
 interface ReturnHollowMapperP1<T> : BaseMapper<T> {
     @Select("SELECT xhollow.hollow_id,time,content,under_post_id," +
-            "reply_post_id,belong_to,support_num,comfort_num,username,image " +
+            "reply_post_id,belong_to,support_num,comfort_num,hollow_name AS username,image " +
             "FROM xhollow JOIN xuser ON belong_to = user_id " +
             "WHERE (time < #{time} AND under_post_id = #{under_post_id}) " +
             "ORDER BY time DESC " +
             "LIMIT 10")
     fun multiSelect(time : Date,under_post_id : Long) : List<ReturnHollowP1>
 
-    @Select("SELECT xhollow.hollow_id,time,content,under_post_id," +
-            "reply_post_id,belong_to,support_num,comfort_num,username,image " +
-            "FROM xhollow JOIN xuser ON belong_to = user_id " +
+    @Select(
+        "SELECT xhollow.hollow_id,time,content,under_post_id," +
+                "reply_post_id,belong_to,support_num,comfort_num,hollow_name AS username,image " +
+                "FROM xhollow JOIN xuser ON belong_to = user_id " +
             "WHERE (time < #{time} AND belong_to = #{user_id}) " +
             "ORDER BY time DESC " +
             "LIMIT 10")
@@ -43,9 +44,10 @@ interface ReturnHollowMapperP1<T> : BaseMapper<T> {
 
 @Component
 interface ReturnHollowMapper<T> : BaseMapper<T> {
-    @Select("SELECT xhollow.hollow_id,time,content,under_post_id," +
-            "reply_post_id,belong_to,support_num,comfort_num,username,image," +
-            "support_attitude,comfort_attitude,against_attitude " +
+    @Select(
+        "SELECT xhollow.hollow_id,time,content,under_post_id," +
+                "reply_post_id,belong_to,support_num,comfort_num,hollow_name AS username,image," +
+                "support_attitude,comfort_attitude,against_attitude " +
             "FROM (xhollow JOIN xuser ON belong_to = user_id) " +
             "JOIN xhattitude ON xhattitude.hollow_id = xhollow.hollow_id " +
             "WHERE (time < #{time} AND under_post_id = #{under_post_id} " +
@@ -53,9 +55,10 @@ interface ReturnHollowMapper<T> : BaseMapper<T> {
             "LIMIT 10")
     fun multiSelect(time : Date,under_post_id : Long,user_id : Long) : List<ReturnHollow>
 
-    @Select("SELECT xhollow.hollow_id,time,content,under_post_id," +
-            "reply_post_id,belong_to,support_num,comfort_num,username,image," +
-            "support_attitude,comfort_attitude,against_attitude " +
+    @Select(
+        "SELECT xhollow.hollow_id,time,content,under_post_id," +
+                "reply_post_id,belong_to,support_num,comfort_num,hollow_name AS username,image," +
+                "support_attitude,comfort_attitude,against_attitude " +
             "FROM (xhollow JOIN xuser ON belong_to = user_id) " +
             "JOIN xhattitude ON xhattitude.hollow_id = xhollow.hollow_id " +
             "WHERE (time < #{time} AND belong_to = #{user_id} " +
@@ -66,9 +69,10 @@ interface ReturnHollowMapper<T> : BaseMapper<T> {
 
 @Component
 interface AgainstHollowMapper<T> : BaseMapper<T>{
-    @Select("SELECT hollow_id,time,content,under_post_id," +
-            "reply_post_id,belong_to,against_num,username " +
-            "FROM xhollow JOIN xuser ON belong_to = user_id " +
+    @Select(
+        "SELECT hollow_id,time,content,under_post_id," +
+                "reply_post_id,belong_to,against_num,hollow_name AS username " +
+                "FROM xhollow JOIN xuser ON belong_to = user_id " +
             "WHERE  against_num > 19 ORDER BY time")
     fun againstSelect() : List<AgainstHollow>
 }
@@ -77,7 +81,7 @@ interface AgainstHollowMapper<T> : BaseMapper<T>{
 interface ReplyHollowMsgMapper<T> : BaseMapper<T>{
     @Select(
         "SELECT xhollow.hollow_id,time,content,under_post_id," +
-                "reply_post_id,belong_to,username,image " +
+                "reply_post_id,belong_to,hollow_name AS username,image " +
                 "FROM (xhollow JOIN xuser ON belong_to = xuser.user_id) " +
                 "JOIN xreplyhollow ON xreplyhollow.hollow_id = xhollow.hollow_id " +
                 "WHERE (time < #{time} AND xreplyhollow.user_id = #{user_id}) " +

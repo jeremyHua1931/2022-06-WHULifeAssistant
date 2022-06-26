@@ -22,9 +22,10 @@ create table xuser
     school      INT,
     hollow_name varchar(20),
     mbti        MEDIUMINT,
-    image       varchar(100),
+    image       TINYTEXT,
     competence  INT,
-    PRIMARY KEY (user_id)
+    PRIMARY KEY (user_id),
+    UNIQUE INDEX unique_wechat_id (`wechat_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 create table xhollow

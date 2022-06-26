@@ -37,8 +37,9 @@ class UpdateMovie {
             println("${LocalDateTime.now()}  Start to init MovieALL Table....." + "       " + LocalDateTime.now())
             for (x in resultMovie) {
                 if (x.ranks >= 7.5) {
-                    var MovieALL =
+                    var MovieALLtmp =
                         MovieAll(x.name, x.crawltime, x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
+                    var MovieALL = addMovieALLInfo(MovieALLtmp)
                     try {
                         movieAllMapper.insert(MovieALL)
                     } catch (e: org.springframework.dao.DuplicateKeyException) {
@@ -109,8 +110,9 @@ class UpdateMovie {
             if (x.ranks > 7.5) {
                 var MovieAllTmp = movieAllMapper.selectList(QueryWrapper<MovieAll>().eq("name", x.name))
                 if (MovieAllTmp.size == 0) {
-                    var MovieAllNew =
+                    var MovieAllNewTmp =
                         MovieAll(x.name, "old", x.ranks, x.detailpage, x.image, x.info, x.description, x.type)
+                    var MovieAllNew = addMovieALLInfo(MovieAllNewTmp)
                     try {
                         movieAllMapper.insert(MovieAllNew)
                     } catch (e: org.springframework.dao.DuplicateKeyException) {
@@ -159,11 +161,93 @@ class UpdateMovie {
                 }
             }
             try {
-                movieMapper.insert(x)
+                var movieNew = addMovieInfo(x)
+                movieMapper.insert(movieNew)
             } catch (e: org.springframework.dao.DuplicateKeyException) {
                 println("Duplicate key: update movie table")
             }
         }
         println("${LocalDateTime.now()} : movie list has been completed !")
+    }
+
+
+    //评论数随机赋值
+    fun addMovieInfo(x: Movie): Movie {
+        var y: Int = x.ranks.toInt()
+
+        x.intj = y
+        x.intp = y
+        x.entj = y
+        x.entp = y
+        x.infj = y
+        x.infp = y
+        x.enfj = y
+        x.enfp = y
+        x.istj = y
+        x.isfj = y
+        x.estj = y
+        x.esfj = y
+        x.istp = y
+        x.isfp = y
+        x.estp = y
+        x.esfp = y
+        x.unintj = 10 - y
+        x.unintp = 10 - y
+        x.unentj = 10 - y
+        x.unentp = 10 - y
+        x.uninfj = 10 - y
+        x.uninfp = 10 - y
+        x.unenfj = 10 - y
+        x.unenfp = 10 - y
+        x.unistj = 10 - y
+        x.unisfj = 10 - y
+        x.unestj = 10 - y
+        x.unesfj = 10 - y
+        x.unistp = 10 - y
+        x.unisfp = 10 - y
+        x.unestp = 10 - y
+        x.unesfp = 10 - y
+        x.recommendtotal = 16 * y
+        x.unrecommendtotal = 16 * (10 - y)
+        return x
+    }
+
+    fun addMovieALLInfo(x: MovieAll): MovieAll {
+        var y: Int = x.ranks.toInt()
+        x.recommendtotal = 16 * y
+        x.unrecommendtotal = 16 * (10 - y)
+        x.intj = y
+        x.intp = y
+        x.entj = y
+        x.entp = y
+        x.infj = y
+        x.infp = y
+        x.enfj = y
+        x.enfp = y
+        x.istj = y
+        x.isfj = y
+        x.estj = y
+        x.esfj = y
+        x.istp = y
+        x.isfp = y
+        x.estp = y
+        x.esfp = y
+        x.unintj = 10 - y
+        x.unintp = 10 - y
+        x.unentj = 10 - y
+        x.unentp = 10 - y
+        x.uninfj = 10 - y
+        x.uninfp = 10 - y
+        x.unenfj = 10 - y
+        x.unenfp = 10 - y
+        x.unistj = 10 - y
+        x.unisfj = 10 - y
+        x.unestj = 10 - y
+        x.unesfj = 10 - y
+        x.unistp = 10 - y
+        x.unisfp = 10 - y
+        x.unestp = 10 - y
+        x.unesfp = 10 - y
+        return x
     }
 }

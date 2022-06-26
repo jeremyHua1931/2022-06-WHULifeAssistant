@@ -12,6 +12,7 @@ import org.rainark.whuassist.util.JwtTokenUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
+import java.nio.charset.StandardCharsets
 import java.util.Date
 
 @RestController
@@ -29,27 +30,39 @@ class UserController {
     lateinit var jwtTokenUtil : JwtTokenUtil
 
     @PostMapping("/user/register")
-    fun register(@JsonParam wechatId : String,
-                 @JsonParam username : String,
-                 @JsonParam phone : String,
-                 @JsonParam school : Int): String{
-        //todo 判断wechatId的格式符合要求
-        if(username == "")
-            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请输入用户名称")
-        if(phone == "")
-            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请输入手机号")
-        //todo 判断学校是否在学校表中
-        val user = User(0,wechatId,username, phone, school,"",0,"",0)
+    fun register(
+        @JsonParam wechatId: String,
+        @JsonParam username: String,
+        @JsonParam image: String
+    ): String {
+        if (username == "")
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER, "请输入用户名称")
+        if (image.length > 254)
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER, "头像导入出错")
+        val user = User(0, wechatId, username, "null", 0, "", 0, image, 0)
         userMapper.insert(user)
         return simpleSuccessResponse()
     }
 
+    @PostMapping("/user/mbti")
+    fun setMbti(
+        @JsonParam userId: Long,
+        @JsonParam mbti: Int
+    ): String {
+
+        val user = userMapper.selectOne(QueryWrapper<User>().eq("user_id", userId))
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER, "所请求用户不存在")
+        user.mbti = mbti.toShort()
+        userMapper.update(user, QueryWrapper<User>().eq("user_id", userId))
+        return simpleSuccessResponse()
+    }
+
     @PostMapping("/user/login")
-    fun login(@JsonParam wechatId: String) : String{
-        if(wechatId == "")
-            throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"不能使用的微信Id登录")
-        val user = userMapper.selectOne(QueryWrapper<User>().eq("wechat_id",wechatId))
-            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"请使用有效的微信Id登录")
+    fun login(@JsonParam wechatId: String): String {
+        if (wechatId == "")
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER, "不能使用的微信Id登录")
+        val user = userMapper.selectOne(QueryWrapper<User>().eq("wechat_id", wechatId))
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER, "请使用有效的微信Id登录")
         return simpleSuccessResponse("user" to user, "token" to jwtTokenUtil.createJWT(user.userId, user.username))
     }
 
@@ -99,11 +112,27 @@ class UserController {
      * 查看用户自己发布的群
      */
     @PostMapping("/user/findGroup")
-    fun userGroupList(@JsonParam userId: Long) : String{
-        val groupList = groupMapper.selectList(QueryWrapper<Group>()
-            .eq("post_id",userId))
-            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER,"不存在的用户")
+    fun userGroupList(@JsonParam userId: Long): String {
+        val groupList = groupMapper.selectList(
+            QueryWrapper<Group>()
+                .eq("post_id", userId)
+        )
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER, "不存在的用户")
         return cascadeSuccessResponse(groupList)
+    }
+
+    @PostMapping("/user/puthollowname")
+    fun setHollowName(
+        @JsonParam userId: Long,
+        @JsonParam holllowName: String
+    ): String {
+        val user = userMapper.selectOne(QueryWrapper<User>().eq("user_id", userId))
+            ?: throw RequestException(ResponseCode.ILLEGAL_PARAMETER, "所请求用户不存在")
+        if (holllowName.toByteArray(StandardCharsets.UTF_8).size > 31)
+            throw RequestException(ResponseCode.ILLEGAL_PARAMETER, "输入用户昵称过长")
+        user.hollow_name = holllowName
+        userMapper.update(user, QueryWrapper<User>().eq("user_id", userId))
+        return simpleSuccessResponse()
     }
 
 }
