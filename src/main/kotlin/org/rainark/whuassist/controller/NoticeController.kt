@@ -22,7 +22,7 @@ class NoticeController {
     fun getAll(@JsonParam msg: String): String {
 
         var result =
-            noticeMapper.selectList(QueryWrapper<Notice>().eq("kind", "notice").orderByDesc("date").last("LIMIT 100"))
+            noticeMapper.selectList(QueryWrapper<Notice>().eq("kind", "notice").orderByDesc("date").last("LIMIT 1"))
 
         return cascadeSuccessResponse(result)
     }

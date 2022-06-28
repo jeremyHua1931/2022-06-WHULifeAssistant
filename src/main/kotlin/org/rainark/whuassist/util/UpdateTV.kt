@@ -103,9 +103,10 @@ class UpdateTV {
             println("${LocalDateTime.now()} : TVall table Init!! This occurs only during initialization")
         }
 
-        tvMapper.truncate()
+
 
         var resultTVNew = TVNetUtil.getTVs(0, 10, true, "new", false)
+        tvMapper.truncate()
 
         for (x in resultTVNew) {
             if (x.ranks >= 7.5) {

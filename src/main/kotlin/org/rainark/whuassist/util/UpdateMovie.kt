@@ -103,9 +103,10 @@ class UpdateMovie {
             println("${LocalDateTime.now()} : Moiveall table Init!! This occurs only during initialization")
         }
 
-        movieMapper.truncate()
+
 
         var resultMovieNew = MovieNetUtil.getMovies(0, 10, true, false, updateTimeNew)
+        movieMapper.truncate()
         for (x in resultMovieNew) {
             if (x.ranks > 7.5) {
                 var MovieAllTmp = movieAllMapper.selectList(QueryWrapper<MovieAll>().eq("name", x.name))

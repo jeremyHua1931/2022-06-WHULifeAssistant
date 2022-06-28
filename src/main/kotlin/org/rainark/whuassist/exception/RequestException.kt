@@ -38,21 +38,24 @@ fun simpleMsgResponse(code : Int, msg : String) : String
     put("msg", msg)
 }.toJSONString().exportInfo()
 
-fun simpleResponse(code : Int, msg : String, data : JSONObject) : String
-        = JSONObject().apply {
+fun simpleResponse(code: Int, msg: String, data: JSONObject): String = JSONObject().apply {
     put("code", code)
     put("msg", msg)
     putAll(data)
 }.toJSONString().exportInfo()
 
-fun simpleSuccessResponse(data : JSONObject) : String
-        = simpleResponse(ResponseCode.SUCCESS.ordinal, ResponseCode.SUCCESS.msg, data)
+fun simpleResponse(data: String): String = JSONObject().apply {
+    put("code", 400)
+    put("msg", data)
+}.toJSONString().exportInfo()
 
-fun simpleSuccessResponse(vararg data : Pair<Any, Any>) : String
-        = simpleSuccessResponse(processPairVararg(data))
+fun simpleSuccessResponse(data: JSONObject): String =
+    simpleResponse(ResponseCode.SUCCESS.ordinal, ResponseCode.SUCCESS.msg, data)
 
-fun simpleErrorResponse(status : ResponseCode, msg : String? = null, data : JSONObject) : String
-        = simpleResponse(status.ordinal, statusMsg(status, msg), data)
+fun simpleSuccessResponse(vararg data: Pair<Any, Any>): String = simpleSuccessResponse(processPairVararg(data))
+
+fun simpleErrorResponse(status: ResponseCode, msg: String? = null, data: JSONObject): String =
+    simpleResponse(status.ordinal, statusMsg(status, msg), data)
 
 fun simpleErrorResponse(status : ResponseCode, msg : String? = null, vararg data : Pair<Any, Any>) : String
         = simpleErrorResponse(status, msg, processPairVararg(data))

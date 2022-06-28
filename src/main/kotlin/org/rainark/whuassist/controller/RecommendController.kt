@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import org.rainark.whuassist.config.JsonParam
 import org.rainark.whuassist.entity.*
 import org.rainark.whuassist.exception.cascadeSuccessResponse
+import org.rainark.whuassist.exception.simpleErrorResponse
+import org.rainark.whuassist.exception.simpleSuccessResponse
 import org.rainark.whuassist.mapper.*
 
 import org.rainark.whuassist.util.UpdateCrawlResult
@@ -237,7 +239,7 @@ class RecommendController {
         if (attitude != 0) {
             novelAttitudeMapper.insert(attitudeNovel)
         }
-        return "yes";
+        return simpleSuccessResponse();
     }
 
     @PostMapping("/recom/attitude/movie")
@@ -319,7 +321,7 @@ class RecommendController {
         if (attitude != 0) {
             movieAttitudeMapper.insert(attitudeMovie)
         }
-        return "yes"
+        return simpleSuccessResponse();
     }
 
     @PostMapping("/recom/attitude/tv")
@@ -400,7 +402,7 @@ class RecommendController {
         if (attitude != 0) {
             tvAttitudeMapper.insert(attitudeTV)
         }
-        return "yes"
+        return simpleSuccessResponse();
     }
 
 

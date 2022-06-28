@@ -88,7 +88,7 @@ class UpdateNovel {
 
 
         //2-清空novel表,并爬取
-        novelMapper.truncate()
+
 
         var resultYuepiao = ArrayList<Novel>()
         var resultRecommend = ArrayList<Novel>()
@@ -102,6 +102,7 @@ class UpdateNovel {
         resultYuepiao.addAll(resultRecommend)
         resultYuepiao.addAll(resultMMYuepiao)
         resultYuepiao.addAll(resultMMRecommend)
+        novelMapper.truncate()
 
         //3-novel表同步总表推荐数
         for (x in resultYuepiao) {

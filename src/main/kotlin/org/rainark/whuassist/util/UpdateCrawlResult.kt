@@ -66,9 +66,9 @@ class UpdateCrawlResult {
         }
         recordCount++
 
-//        updateNovel.updateNovel()
-//        updateTV.updateTV()
-//        updateMovie.updateMovie()
+        updateNovel.updateNovel()
+        updateTV.updateTV()
+        updateMovie.updateMovie()
 
         println("${LocalDateTime.now()} : recommended list has beend refreshed !")
     }
