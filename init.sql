@@ -12,6 +12,10 @@ drop table if exists tvattitude;
 drop table if exists xgroup;
 drop table if exists xgattitude;
 drop table if exists map;
+drop table if exists xmovie;
+drop table if exists xmovieall;
+drop table if exists notice;
+drop table if exists xagainst;
 
 create table xuser
 (
@@ -69,7 +73,7 @@ create table xreplyhollow
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-drop table if exists map;
+
 create table map
 (
     primarykey varchar(500),
@@ -84,7 +88,7 @@ create table map
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-drop table if exists notice;
+
 create table notice
 (
     type      varchar(500),
@@ -101,8 +105,7 @@ create table notice
 
 #xmovie table only records the current popular movies
 #xmovie all table only records high score movies. If the popular movies are new high scores, update this table
-drop table if exists xmovie;
-drop table if exists xmovieall;
+
 create table xmovie
 (
     name             varchar(255),

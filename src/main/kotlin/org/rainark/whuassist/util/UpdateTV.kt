@@ -33,7 +33,7 @@ class UpdateTV {
         var tvJudge = tvAllMapper.selectList(QueryWrapper<TVAll>().eq("crawltime", "old"))
         if (recordCount == 0 && tvJudge.size == 0) {
             println("${LocalDateTime.now()}  Start to craw  TVs  .....")
-            var resultTV = TVNetUtil.getTVs(0, 20, true, "old", true)
+            var resultTV = TVNetUtil.getTVs(0, 100, true, "old", true)
             println("${LocalDateTime.now()}  Start to init TVALL Table....." + "       " + LocalDateTime.now())
             for (x in resultTV) {
                 if (x.ranks >= 7.5) {
